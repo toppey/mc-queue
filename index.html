@@ -47,7 +47,6 @@
       padding: 20px;
     }
 
-    /* แถบส่วนหัวด้านบน: สีน้ำเงินไฮไลต์ทึบสีเดียว (Solid) */
     .top-toolbar {
       background-color: var(--blue-solid);
       border-radius: 16px;
@@ -1173,20 +1172,36 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   // 📌 ลิงก์ API หลังบ้าน Google Apps Script (/exec)
- const GAS_API_URL = "[https://script.google.com/macros/s/AKfycbx9wzGdS0BG8w9sl6bmDMDwmJnFqkRaEQqOJwsBXanIZ9yJoLpoP3lvntpfit-Tg0MnAg/exec](https://script.google.com/macros/s/AKfycbx9wzGdS0BG8w9sl6bmDMDwmJnFqkRaEQqOJwsBXanIZ9yJoLpoP3lvntpfit-Tg0MnAg/exec)";
-  // 📌 ฟังก์ชันกลางสำหรับส่งคำขอไปหา Google Apps Script (แทน google.script.run)
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx9wzGdS0BG8w9sl6bmDMDwmJnFqkRaEQqOJwsBXanIZ9yJoLpoP3lvntpfit-Tg0MnAg/exec";
+
+  // 📌 ฟังก์ชันกลางสำหรับส่งคำขอไปหา Google Apps Script (ใช้ GET เพื่อรองรับ iPhone Safari 100%)
   async function callGasApi(action, params = {}) {
-    const response = await fetch(GAS_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({ action, ...params })
-    });
-    if (!response.ok) {
-      throw new Error("HTTP Error: " + response.status);
+    const isHeavyUpload = (action === 'addNewHostFull' || action === 'updateHostData');
+
+    if (!isHeavyUpload) {
+      const url = new URL(GAS_API_URL);
+      url.searchParams.set("action", action);
+      url.searchParams.set("data", JSON.stringify(params));
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        redirect: "follow"
+      });
+      if (!response.ok) {
+        throw new Error("HTTP Error: " + response.status);
+      }
+      return await response.json();
+    } else {
+      const response = await fetch(GAS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, ...params })
+      });
+      if (!response.ok) {
+        throw new Error("HTTP Error: " + response.status);
+      }
+      return await response.json();
     }
-    return await response.json();
   }
 
   let currentData = {}; 
@@ -1478,7 +1493,7 @@
         renderGrid(parseInt(year), parseInt(month));
       })
       .catch(err => {
-        let errHtml = `<div class="text-center p-5 text-danger" style="grid-column: span 7;">โหลดข้อมูลไม่สำเร็จ: ${err.message}<br><small class="text-muted">ตรวจสอบการ Deploy ล่าสุดและสิทธิ์ Who has access = Anyone ใน Google Apps Script</small></div>`;
+        let errHtml = `<div class="text-center p-5 text-danger" style="grid-column: span 7;">โหลดข้อมูลไม่สำเร็จ: ${err.message}<br><small class="text-muted">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือรีเฟรชหน้าเว็บอีกครั้ง</small></div>`;
         document.getElementById('calendarGrid').innerHTML = errHtml;
         document.getElementById('mobileAgendaList').innerHTML = errHtml;
       });
