@@ -5,28 +5,2547 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2563eb">
   <title>จัดคิว MC</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  
   <style>
+    :root {
+      --bg-app: #f1f5f9;
+      --surface: #ffffff;
+      --border-subtle: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary-accent: #2563eb;
+      --primary-soft: #eff6ff;
+      --blue-solid: #2563eb;
+    }
+
     html, body {
+      background-color: var(--blue-solid) !important;
+      color: var(--text-main);
+      font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif; 
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #2563eb;
-      overflow: hidden;
+      min-height: 100vh;
+      overscroll-behavior-y: none;
+      -webkit-font-smoothing: antialiased;
     }
-    iframe {
+
+    .app-shell {
+      background-color: var(--bg-app);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* แถบส่วนหัวด้านบน: สีน้ำเงินไฮไลต์ทึบสีเดียว (Solid) */
+    .top-toolbar {
+      background-color: var(--blue-solid);
+      border-radius: 16px;
+      padding: 16px 20px;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.16);
+    }
+    .toolbar-divider {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .app-brand-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.45rem;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .toolbar-label {
+      color: rgba(255, 255, 255, 0.95) !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+    }
+
+    .toolbar-row-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-toolbar-glass {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #ffffff;
+      border-radius: 9px;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 6px 13px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn-toolbar-glass:hover {
+      background: rgba(255, 255, 255, 0.26);
+      color: #ffffff;
+    }
+
+    .btn-toolbar-white {
+      background: #ffffff;
+      border: 1px solid #ffffff;
+      color: var(--primary-accent);
+      border-radius: 9px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 6px 13px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn-toolbar-white:hover {
+      background: #f8fafc;
+      color: #1d4ed8;
+    }
+
+    .form-select-toolbar, .form-control-toolbar {
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background-color: #ffffff;
+      height: 36px;
+      min-height: 36px;
+      padding: 0 12px;
+      line-height: normal;
+      width: auto;
+      text-align: left;
+      text-align-last: left;
+    }
+    .form-select-toolbar {
+      padding-right: 32px;
+    }
+    .form-control-toolbar[type="month"] {
+      -webkit-appearance: none;
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+    }
+    .form-select-toolbar:focus, .form-control-toolbar:focus {
+      background-color: #ffffff;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-modern {
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn-modern-light {
+      background: #f8fafc;
+      border: 1px solid var(--border-subtle);
+      color: #334155;
+    }
+    .btn-modern-light:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: var(--text-main);
+    }
+    .btn-modern-primary {
+      background: var(--primary-accent);
+      border: 1px solid var(--primary-accent);
+      color: #ffffff;
+    }
+    .btn-modern-primary:hover {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+
+    .form-select-modern, .form-control-modern {
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.92rem;
+      color: var(--text-main);
+      background-color: #f8fafc;
+      padding: 8px 12px;
+      min-height: 42px;
+    }
+    .form-select-modern:focus, .form-control-modern:focus {
+      background-color: #ffffff;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+    .calendar-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+    .day-header { 
+      text-align: center; 
+      font-weight: 600; 
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: #f8fafc; 
+      padding: 10px 6px; 
+      border-radius: 8px; 
+      border: 1px solid #f1f5f9;
+    }
+    .day-card { 
+      min-height: 122px; 
+      background: #ffffff; 
+      border: 1px solid var(--border-subtle); 
+      border-radius: 12px; 
+      padding: 8px 9px; 
+      cursor: pointer; 
+      transition: all 0.18s ease; 
+      position: relative; 
+      display: flex;
+      flex-direction: column;
+    }
+    .day-card:hover { 
+      border-color: #93c5fd; 
+      box-shadow: 0 6px 14px -2px rgba(15, 23, 42, 0.07); 
+    }
+    .day-card.empty-slot {
+      background: #f8fafc;
+      border-color: transparent;
+      cursor: default;
+    }
+    .day-card.empty-slot:hover { box-shadow: none; }
+    .day-card.is-today {
+      border: 2px solid var(--primary-accent);
+      background: #fafcff;
+    }
+
+    .day-number {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1e293b;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .today-dot {
+      font-size: 0.68rem;
+      background: var(--primary-accent);
+      color: white;
+      padding: 1px 6px;
+      border-radius: 99px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .btn-day-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #64748b;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all 0.15s ease;
+    }
+    .btn-day-icon:hover {
+      background: var(--primary-accent);
+      border-color: var(--primary-accent);
+      color: #ffffff;
+    }
+    .btn-day-copy:hover {
+      background: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+    }
+
+    .prog-pill {
+      font-size: 0.78rem;
+      border-radius: 8px;
+      padding: 6px 8px;
+      margin-bottom: 5px;
+      line-height: 1.35;
+      border: 1px solid transparent;
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+    .prog-pill:hover {
+      filter: brightness(0.96);
+      transform: translateX(1px);
+    }
+
+    .prog-header-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+    }
+    .prog-time-tag {
+      font-size: 0.69rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 1px 6px;
+      border-radius: 5px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .prog-buppha { background: #fdf4ff; border-color: #f5d0fe; color: #86198f; }
+    .prog-food   { background: #eff6ff; border-color: #dbeafe; color: #1e40af; }
+    .prog-sentang{ background: #ecfdf5; border-color: #d1fae5; color: #065f46; }
+    .prog-design { background: #fff7ed; border-color: #ffedd5; color: #9a3412; }
+    .prog-fight  { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .prog-tape   { background: #f8fafc; border-color: #e2e8f0; color: #334155; }
+    .prog-special{ background: #fffbeb; border-color: #fde68a; color: #92400e; }
+
+    .contact-box { 
+      font-size: 0.84rem; 
+      color: #1e40af; 
+      background-color: #eff6ff; 
+      border: 1px solid #bfdbfe;
+      border-radius: 8px; 
+      padding: 6px 10px; 
+      margin-top: 6px; 
+      display: none; 
+    }
+    
+    .avatar-sm { width: 42px; height: 42px; object-fit: cover; border-radius: 50%; border: 2px solid #e2e8f0; background: #f8fafc; }
+    .avatar-placeholder { width: 42px; height: 42px; border-radius: 50%; background: #f1f5f9; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #64748b; border: 1px solid #e2e8f0; }
+    
+    .host-name-link { cursor: pointer; transition: color 0.15s ease; }
+    .host-name-link:hover { color: var(--primary-accent) !important; text-decoration: underline; }
+
+    .status-bar-Ready { border-left: 4px solid #10b981; padding-left: 10px; }
+    .status-bar-Rest { border-left: 4px solid #f59e0b; padding-left: 10px; }
+    .status-bar-Retire { border-left: 4px solid #06b6d4; padding-left: 10px; }
+
+    .select-status-Ready { background-color: #ecfdf5 !important; color: #065f46 !important; border-color: #a7f3d0 !important; font-weight: 600; border-radius: 8px; }
+    .select-status-Rest { background-color: #fffbeb !important; color: #92400e !important; border-color: #fde68a !important; font-weight: 600; border-radius: 8px; }
+    .select-status-Retire { background-color: #ecfeff !important; color: #155e75 !important; border-color: #a5f3fc !important; font-weight: 600; border-radius: 8px; }
+
+    .photo-preview-box { 
+      width: 100%; 
+      max-width: 148px; 
+      aspect-ratio: 1 / 1; 
+      margin: 0 auto; 
+      border: 2px dashed #cbd5e1; 
+      border-radius: 12px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background-size: cover; 
+      background-position: center; 
+      position: relative; 
+      cursor: pointer; 
+      background-color: #f8fafc; 
+      transition: 0.15s; 
+    }
+    .photo-preview-box:hover { border-color: var(--primary-accent); background-color: #eff6ff; }
+    .photo-preview-box input { display: none; }
+
+    .profile-square-img {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 14px;
+      margin: 0 auto;
       display: block;
-      width: 100%;
-      height: 100%;
-      border: none;
-      padding-top: env(safe-area-inset-top);
-      box-sizing: border-box;
     }
+
+    .modal-content { border: none; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.08); }
+    .modal-header { border-bottom: 1px solid var(--border-subtle); padding: 16px 22px; border-top-left-radius: 16px; border-top-right-radius: 16px; }
+    .modal-footer { border-top: 1px solid var(--border-subtle); padding: 14px 22px; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+
+    .navy-modal-header {
+      background: var(--blue-solid) !important;
+      color: #ffffff !important;
+      border-bottom: none !important;
+    }
+    .navy-modal-header .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+    .navy-modal-footer {
+      background: var(--blue-solid) !important;
+      color: #ffffff !important;
+      border-top: none !important;
+      padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .sf-result-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 11px 14px;
+      margin-bottom: 8px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .sf-result-card:hover {
+      border-color: var(--primary-accent);
+      background: #fafcff;
+    }
+
+    .copy-toast {
+      position: fixed;
+      top: calc(16px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%) translateY(-140px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 99px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      white-space: nowrap;
+    }
+    .copy-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .mobile-agenda-list { display: none; }
+    .mobile-bottom-nav { display: none; }
+    .mobile-dir-cards { display: none; }
+
+    @media (max-width: 768px) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .app-shell {
+        height: 100dvh;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        background-color: var(--bg-app);
+        overflow: hidden;
+      }
+      .main-app-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden;
+      }
+      
+      .top-toolbar {
+        flex-shrink: 0;
+        width: 100%;
+        z-index: 1030;
+        border-radius: 0 !important;
+        padding: calc(10px + env(safe-area-inset-top)) 14px 12px 14px !important;
+        margin: 0 !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.18);
+      }
+      .toolbar-divider {
+        padding-bottom: 6px !important;
+        margin-bottom: 8px !important;
+      }
+      .desktop-only-btn { display: none !important; }
+      .app-brand-title { font-size: 1.48rem; }
+      .toolbar-label {
+        min-width: 74px;
+      }
+      .toolbar-row-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toolbar-row-item .form-select-toolbar,
+      .toolbar-row-item .form-control-toolbar {
+        flex: 1;
+        width: 100%;
+        min-width: 0 !important;
+        font-size: 0.92rem;
+        height: 36px;
+        min-height: 36px;
+        padding: 0 12px;
+        text-align: right;
+        text-align-last: right;
+      }
+      .toolbar-row-item .form-select-toolbar {
+        padding-right: 30px;
+      }
+
+      .scroll-content-area {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 12px calc(78px + env(safe-area-inset-bottom)) 12px;
+      }
+
+      .legend-bar { padding: 0 2px !important; margin-bottom: 10px; }
+      #captureArea:not(.capture-mode) { padding: 0 !important; }
+
+      #captureArea:not(.capture-mode) .calendar-header-row,
+      #captureArea:not(.capture-mode) #calendarGrid { display: none !important; }
+      #captureArea:not(.capture-mode) { background: transparent; border: none; box-shadow: none; }
+      #captureArea:not(.capture-mode) .mobile-agenda-list { display: flex; flex-direction: column; gap: 10px; }
+
+      #captureArea:not(.capture-mode) .prog-header-wrap {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .agenda-card {
+        background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 11px 12px;
+        display: flex; align-items: flex-start; gap: 10px; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+      }
+      .agenda-card.is-today { border: 2px solid var(--primary-accent); background: #fafcff; }
+      
+      .agenda-date-box {
+        min-width: 52px; height: 56px; border-radius: 12px; background: #f1f5f9;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2px 4px;
+      }
+      .agenda-card.is-today .agenda-date-box { background: var(--primary-accent); color: #ffffff; }
+      .agenda-card.is-today .agenda-dow { color: #dbeafe !important; }
+      .agenda-dow { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); line-height: 1.05; }
+      .agenda-dom { font-size: 1.48rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+      .agenda-content { flex: 1; min-width: 0; }
+
+      .modal-dialog { margin: 0 !important; width: 100% !important; max-width: 100% !important; display: flex; align-items: flex-end; min-height: 100%; }
+      .modal-content { width: 100% !important; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 22px; border-top-right-radius: 22px; max-height: 92vh; overflow: hidden; }
+      .modal-header::before { content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 38px; height: 4px; background: rgba(255,255,255,0.35); border-radius: 99px; }
+      .modal-header:not(.navy-modal-header)::before { background: #cbd5e1; }
+      .modal-header { padding-top: 22px; }
+
+      .profile-square-img { max-width: 220px; }
+
+      .desktop-dir-table { display: none; }
+      .mobile-dir-cards { display: flex; flex-direction: column; gap: 10px; }
+      .m-host-card { background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px; display: flex; align-items: center; gap: 12px; }
+
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--blue-solid);
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+        z-index: 1040;
+        justify-content: space-around;
+        box-shadow: 0 -4px 14px rgba(37, 99, 235, 0.18);
+      }
+      .nav-tab-btn {
+        background: none;
+        border: none;
+        border-right: 1px solid rgba(255, 255, 255, 0.18);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 4px 6px;
+        opacity: 0.92;
+        transition: opacity 0.15s ease;
+      }
+      .nav-tab-btn:last-child {
+        border-right: none;
+      }
+      .nav-tab-btn i {
+        font-size: 1.25rem;
+        color: #ffffff !important;
+      }
+      .nav-tab-btn.active, .nav-tab-btn:active {
+        opacity: 1;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+      }
+    }
+
+    .capture-mode { width: 1200px !important; max-width: none !important; background-color: white !important; padding: 24px !important; }
+    .capture-mode .calendar-header-row, .capture-mode #calendarGrid { display: grid !important; }
+    .capture-mode .mobile-agenda-list, .capture-mode .btn-day-icon { display: none !important; }
+    .print-title { display: none; } 
   </style>
 </head>
 <body>
- <iframe src="https://script.google.com/macros/s/AKfycbwisHvsL71r0T94cMhFgpSrkjkAtsZezil9oGOGz_cktll49UBS3t2N-U5FUhKWFapnOg/exec" allow="clipboard-read; clipboard-write"></iframe>
+
+<div class="app-shell">
+<div id="copyToast" class="copy-toast">
+  <i class="bi bi-check-circle-fill text-success fs-5"></i>
+  <span id="copyToastText">คัดลอกข้อความหมายงานเรียบร้อยแล้ว</span>
+</div>
+
+<div class="container-fluid main-app-wrapper" style="max-width: 1440px;">
+  
+  <!-- Top Toolbar -->
+  <div class="top-toolbar mb-3 no-print">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pb-2 mb-2 toolbar-divider">
+      <h1 class="app-brand-title">จัดคิว MC</h1>
+      <div class="d-flex gap-2 desktop-only-btn">
+        <button class="btn btn-toolbar-glass" onclick="openSmartFinder()">
+          <i class="bi bi-search"></i> ค้นหาคิว/วิทยากร
+        </button>
+        <button class="btn btn-toolbar-white" onclick="openHostDirectory()">
+          <i class="bi bi-person-lines-fill text-primary"></i> สมุดรายชื่อพิธีกร
+        </button>
+      </div>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="d-flex align-items-center flex-wrap gap-2 flex-grow-1">
+        <div class="toolbar-row-item flex-md-grow-0">
+          <label class="small fw-semibold toolbar-label m-0 text-nowrap"><i class="bi bi-broadcast"></i> รายการ:</label>
+          <select id="programSelect" class="form-select form-select-toolbar fw-semibold" style="min-width: 220px;" onchange="loadCalendar()">
+            <option value="รวมทุกรายการ">รวมทุกรายการ</option>
+            <option value="พิธีบุปพเปตพลี">พิธีบุปพเปตพลี</option>
+            <option value="พิธีถวายภัตตาหารเป็นสังฆทาน">พิธีถวายภัตตาหารเป็นสังฆทาน</option>
+            <option value="เส้นทางบุญ">เส้นทางบุญ</option>
+            <option value="ผู้ออกแบบชีวิต">ผู้ออกแบบชีวิต</option>
+            <option value="สู้ต่อไป">สู้ต่อไป</option>
+            <option value="บันทึกเทปอื่นๆ">บันทึกเทปอื่นๆ</option>
+            <option value="รายการพิเศษ">รายการพิเศษ</option>
+          </select>
+        </div>
+
+        <div class="toolbar-row-item flex-md-grow-0">
+          <label class="small fw-semibold toolbar-label m-0 text-nowrap"><i class="bi bi-calendar3"></i> เดือน/ปี:</label>
+          <input type="month" id="monthPicker" class="form-control form-control-toolbar fw-semibold" style="min-width: 220px;" onchange="loadCalendar()">
+          <button type="button" class="btn btn-toolbar-glass desktop-only-btn text-nowrap" onclick="goToToday()" title="กลับไปยังเดือนและวันที่ปัจจุบัน">
+            <i class="bi bi-calendar-check"></i> วันนี้
+          </button>
+        </div>
+      </div>
+      
+      <button class="btn btn-toolbar-glass desktop-only-btn" id="btnSaveImg" onclick="downloadAsImage()">
+        <i class="bi bi-camera"></i> เซฟรูป
+      </button>
+    </div>
+  </div>
+
+  <!-- พื้นที่เลื่อนเฉพาะเนื้อหาตารางคิว -->
+  <div class="scroll-content-area">
+    <!-- Legend Bar -->
+    <div class="legend-bar px-1 no-print">
+      <span class="legend-item"><span class="legend-dot" style="background:#d946ef;"></span> พิธีบุปพเปตพลี</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> พิธีถวายภัตตาหารฯ</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> เส้นทางบุญ</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> ผู้ออกแบบชีวิต</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> สู้ต่อไป</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#64748b;"></span> บันทึกเทปอื่นๆ</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> รายการพิเศษ</span>
+    </div>
+
+    <!-- Calendar Container -->
+    <div id="captureArea" class="calendar-wrapper">
+      <h4 class="print-title fw-bold text-dark" id="printTitle">ผังคิวพิธีกรประจำเดือน</h4>
+      
+      <div class="calendar-grid mb-2 calendar-header-row">
+        <div class="day-header text-danger">อาทิตย์</div>
+        <div class="day-header">จันทร์</div>
+        <div class="day-header">อังคาร</div>
+        <div class="day-header">พุธ</div>
+        <div class="day-header">พฤหัสบดี</div>
+        <div class="day-header">ศุกร์</div>
+        <div class="day-header text-primary">เสาร์</div>
+      </div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+      <div id="mobileAgendaList" class="mobile-agenda-list"></div>
+    </div>
+  </div>
+  
+</div>
+</div>
+
+<!-- Mobile Bottom Navigation Bar -->
+<nav class="mobile-bottom-nav no-print">
+  <button class="nav-tab-btn" id="navTabSearch" onclick="openSmartFinder()">
+    <i class="bi bi-search"></i>
+    <span>ค้นหา</span>
+  </button>
+  <button class="nav-tab-btn" id="navTabToday" onclick="goToToday()">
+    <i class="bi bi-calendar-check"></i>
+    <span>วันนี้</span>
+  </button>
+  <button class="nav-tab-btn" id="btnMobileSaveImg" onclick="downloadAsImage()">
+    <i class="bi bi-image"></i>
+    <span>เซฟรูป</span>
+  </button>
+  <button class="nav-tab-btn" id="navTabDirectory" onclick="openHostDirectory()">
+    <i class="bi bi-person-lines-fill"></i>
+    <span>รายชื่อ</span>
+  </button>
+</nav>
+
+<!-- Modal Smart Finder -->
+<div class="modal fade" id="smartFinderModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header navy-modal-header">
+        <h5 class="modal-title fw-bold text-white m-0"><i class="bi bi-search me-2"></i>Smart Finder ค้นหาคิวงาน</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-3 p-md-4 bg-light">
+        <div class="input-group mb-2 shadow-sm">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-primary"></i></span>
+          <input type="text" id="sfSearchInput" class="form-control form-control-modern border-start-0 ps-0 bg-white" placeholder="พิมพ์ชื่อแขกรับเชิญ, พิธีกร, ชื่อตอน, รายการ..." oninput="runSmartFinder()" autocomplete="off">
+          <button class="btn btn-light border" type="button" onclick="clearSmartFinder()" title="ล้างคำค้น"><i class="bi bi-x-lg text-muted"></i></button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="small text-muted text-nowrap"><i class="bi bi-calendar-event"></i> หรือเลือกวันที่ตรงๆ:</span>
+          <input type="date" id="sfDateJump" class="form-control form-control-modern bg-white" style="min-height:38px; font-size:0.88rem;" onchange="jumpToDateFromFinder()">
+        </div>
+
+        <div id="sfResultCount" class="small fw-semibold text-muted mb-2"></div>
+        <div id="sfResultsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal จัดคิวงาน -->
+<div class="modal fade" id="queueActionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-white">
+        <h5 class="modal-title fw-bold text-dark" id="qaModalTitle">
+          <i class="bi bi-plus-circle text-primary me-2"></i>เพิ่มรายการใหม่
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <input type="hidden" id="qaDate">
+        <input type="hidden" id="qaEditRowIdx" value="">
+        <input type="hidden" id="qaOldProgramName" value="">
+        <input type="hidden" id="qaOldGuestName" value="">
+
+        <div class="mb-3" id="qaCategoryGroup">
+          <label class="form-label fw-semibold small text-muted">เลือกรายการ <span class="text-danger">*</span></label>
+          <select id="qaCategorySelect" class="form-select form-select-modern fw-semibold" onchange="onQaCategoryChange()">
+            <option value="">-- กรุณาเลือกรายการ --</option>
+            <option value="พิธีบุปพเปตพลี">พิธีบุปพเปตพลี</option>
+            <option value="พิธีถวายภัตตาหารเป็นสังฆทาน">พิธีถวายภัตตาหารเป็นสังฆทาน</option>
+            <option value="เส้นทางบุญ">เส้นทางบุญ</option>
+            <option value="ผู้ออกแบบชีวิต">ผู้ออกแบบชีวิต</option>
+            <option value="สู้ต่อไป">สู้ต่อไป</option>
+            <option value="บันทึกเทปอื่นๆ">บันทึกเทปอื่นๆ</option>
+            <option value="รายการพิเศษ">รายการพิเศษ</option>
+          </select>
+        </div>
+
+        <div class="mb-3 d-none" id="qaLockedProgramBanner">
+          <div class="p-2 px-3 rounded-3 bg-light border d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-dark" id="qaLockedProgramText"></span>
+            <span class="badge bg-primary bg-opacity-10 text-primary">กำลังแก้ไข</span>
+          </div>
+        </div>
+
+        <div class="d-none" id="qaGuestSection">
+          <div class="mb-2 position-relative">
+            <label class="form-label fw-semibold small text-muted">ชื่อแขกรับเชิญ / วิทยากร</label>
+            <input type="text" id="qaGuestName" class="form-control form-control-modern" placeholder="พิมพ์ชื่อวิทยากรเพื่อเช็กประวัติย้อนหลัง..." oninput="checkGuestHistory()" autocomplete="off">
+            <div id="guestHistoryAlert" class="mt-2 d-none"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold small text-muted">ชื่อตอน / หัวข้อสัมภาษณ์</label>
+            <input type="text" id="qaEpisodeTitle" class="form-control form-control-modern" placeholder="ระบุชื่อตอนหรือหัวข้อ...">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3 d-none" id="qaNameSection">
+          <div class="col-md-7" id="qaEvtCol">
+            <label class="form-label fw-semibold small text-muted" id="qaEvtLabel">ชื่องาน / ชื่อตอน</label>
+            <input type="text" id="qaEventName" class="form-control form-control-modern" placeholder="ระบุชื่อ...">
+          </div>
+          <div class="col-md-5" id="qaSesCol">
+            <label class="form-label fw-semibold small text-muted">ชื่อช่วง / รอบที่</label>
+            <input type="text" id="qaSessionName" class="form-control form-control-modern" placeholder="เช่น ช่วงที่ 1">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3 d-none" id="qaTimeSection">
+          <div class="col-6">
+            <label class="form-label fw-semibold small text-muted">เวลาเริ่ม</label>
+            <input type="time" id="qaStartTime" class="form-control form-control-modern" value="14:00" onchange="onQaStartTimeChange()">
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold small text-muted">เวลาจบ</label>
+            <input type="time" id="qaEndTime" class="form-control form-control-modern" value="16:00">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small text-muted">พิธีกร 1</label>
+            <select id="qaHost1" class="form-select form-select-modern" onchange="updateQaHostOptions()"></select>
+            <div id="qaHost1Contact" class="contact-box"></div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold small text-muted">พิธีกร 2</label>
+            <select id="qaHost2" class="form-select form-select-modern" onchange="updateQaHostOptions()"></select>
+            <div id="qaHost2Contact" class="contact-box"></div>
+          </div>
+        </div>
+
+        <div class="mb-1">
+          <label class="form-label fw-semibold small text-muted">หมายเหตุ / รายละเอียดเพิ่มเติม</label>
+          <input type="text" id="qaNote" class="form-control form-control-modern" placeholder="เช่น เปิดเทปบันทึก, ลิงก์ Zoom...">
+        </div>
+      </div>
+
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-modern btn-outline-danger me-auto d-none" id="btnQaDelete" onclick="deleteSelectedQueue()">
+          <i class="bi bi-trash3"></i> ลบรายการนี้
+        </button>
+        <button type="button" class="btn btn-modern btn-modern-light" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-modern btn-modern-primary" id="btnQaSave" onclick="submitUniversalQueue()">
+          <i class="bi bi-check2-circle"></i> บันทึก & Sync
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3: สมุดรายชื่อพิธีกร -->
+<div class="modal fade" id="directoryModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header navy-modal-header">
+        <h5 class="modal-title fw-bold text-white m-0">สมุดรายชื่อพิธีกรและสถานะ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-3 p-md-4 bg-light">
+        <div class="table-responsive desktop-dir-table bg-white rounded-3 border">
+          <table class="table table-hover align-middle m-0">
+            <thead class="table-light text-muted small">
+              <tr>
+                <th style="width: 7%; text-align: center;">รูป</th>
+                <th>ชื่อ - นามสกุล</th>
+                <th style="width: 12%;">ชื่อเล่น</th>
+                <th style="width: 18%;">เบอร์โทรศัพท์</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 11%; text-align: center;">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="hostTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="mobileHostCards" class="mobile-dir-cards"></div>
+      </div>
+      <div class="modal-footer navy-modal-footer d-flex justify-content-between align-items-center gap-2 flex-nowrap">
+        <div class="input-group flex-grow-1" style="max-width: 440px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="searchHostInput" class="form-control form-control-modern border-start-0 ps-0 bg-white" style="min-height: 38px; height: 38px;" placeholder="ค้นหาชื่อ, ชื่อเล่น, สถานภาพ..." onkeyup="filterHostDirectory()">
+        </div>
+        <button class="btn btn-toolbar-white text-nowrap" style="height: 38px;" onclick="openAddHostModal()">
+          <i class="bi bi-person-plus-fill text-primary"></i> เพิ่มรายชื่อ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4: ฟอร์มลงทะเบียน/แก้ไขประวัติพิธีกร -->
+<div class="modal fade" id="addHostModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header navy-modal-header">
+        <h5 class="modal-title fw-bold text-white" id="hostFormModalTitle"><i class="bi bi-person-plus me-2"></i>ฟอร์มลงทะเบียนประวัติพิธีกร</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="hostRegForm">
+          <input type="hidden" id="editRowIdx" value="">
+          
+          <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-images me-1"></i> รูปถ่ายพิธีกร (สัดส่วน 1:1 จัตุรัส พร้อมปรับตำแหน่ง/ซูม)</h6>
+          <div class="row g-2 g-md-3 mb-4">
+            <div class="col-4 text-center">
+              <label class="form-label small fw-semibold text-muted">รูปที่ 1</label>
+              <div class="photo-preview-box" id="boxPhoto0" onclick="document.getElementById('inputPhoto0').click()">
+                <span class="text-muted small" id="lblPhoto0"><i class="bi bi-plus-lg d-block fs-5"></i>เลือกรูป</span>
+                <input type="file" id="inputPhoto0" accept="image/*" onchange="previewImage(0)">
+              </div>
+              <div class="form-check mt-2 d-inline-block">
+                <input class="form-check-input" type="radio" name="mainPhotoRadio" id="mainRadio0" value="0" checked>
+                <label class="form-check-label small" for="mainRadio0">ภาพหลัก</label>
+              </div>
+            </div>
+            <div class="col-4 text-center">
+              <label class="form-label small fw-semibold text-muted">รูปที่ 2</label>
+              <div class="photo-preview-box" id="boxPhoto1" onclick="document.getElementById('inputPhoto1').click()">
+                <span class="text-muted small" id="lblPhoto1"><i class="bi bi-plus-lg d-block fs-5"></i>เลือกรูป</span>
+                <input type="file" id="inputPhoto1" accept="image/*" onchange="previewImage(1)">
+              </div>
+              <div class="form-check mt-2 d-inline-block">
+                <input class="form-check-input" type="radio" name="mainPhotoRadio" id="mainRadio1" value="1">
+                <label class="form-check-label small" for="mainRadio1">ภาพหลัก</label>
+              </div>
+            </div>
+            <div class="col-4 text-center">
+              <label class="form-label small fw-semibold text-muted">รูปที่ 3</label>
+              <div class="photo-preview-box" id="boxPhoto2" onclick="document.getElementById('inputPhoto2').click()">
+                <span class="text-muted small" id="lblPhoto2"><i class="bi bi-plus-lg d-block fs-5"></i>เลือกรูป</span>
+                <input type="file" id="inputPhoto2" accept="image/*" onchange="previewImage(2)">
+              </div>
+              <div class="form-check mt-2 d-inline-block">
+                <input class="form-check-input" type="radio" name="mainPhotoRadio" id="mainRadio2" value="2">
+                <label class="form-check-label small" for="mainRadio2">ภาพหลัก</label>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. ข้อมูลส่วนตัวพื้นฐานและสถานะ</h6>
+          <div class="row g-2 mb-2">
+            <div class="col-md-5">
+              <label class="form-label small fw-semibold text-muted">ชื่อ (จริง) <span class="text-danger">*</span></label>
+              <input type="text" id="hFname" class="form-control form-control-modern" required placeholder="เช่น วิทยา">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">นามสกุล</label>
+              <input type="text" id="hLname" class="form-control form-control-modern" placeholder="เช่น ทองแดง">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-semibold text-muted">ชื่อเล่น <span class="text-danger">*</span></label>
+              <input type="text" id="hNick" class="form-control form-control-modern" required placeholder="เช่น จอร์จ">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6 col-md-3">
+              <label class="form-label small fw-semibold text-muted">เพศ</label>
+              <select id="hSex" class="form-select form-select-modern">
+                <option value="ชาย">ชาย</option>
+                <option value="หญิง">หญิง</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-4">
+              <label class="form-label small fw-semibold text-muted">สถานะการทำงาน (Status)</label>
+              <select id="hStatus" class="form-select form-select-modern fw-semibold">
+                <option value="Ready">Ready (พร้อมจัดคิว)</option>
+                <option value="Rest">Rest (พักงานชั่วคราว)</option>
+                <option value="Retire">Retire (เกษียณ/ซ่อนชื่อ)</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-5">
+              <label class="form-label small fw-semibold text-muted">วัน/เดือน/ปี เกิด <span class="text-danger">*</span></label>
+              <input type="date" id="hBirthDate" class="form-control form-control-modern" required>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold text-muted">สถานภาพ</label>
+              <select id="hRoleStatus" class="form-select form-select-modern" onchange="onRoleStatusChange()">
+                <option value="">-- เลือกสถานภาพ --</option>
+                <option value="อุบาสก">อุบาสก</option>
+                <option value="อุบาสิกา">อุบาสิกา</option>
+                <option value="อาสาสมัคร">อาสาสมัคร</option>
+                <option value="ศาสนูปถัมภ์">ศาสนูปถัมภ์</option>
+                <option value="อื่นๆ">อื่นๆ (ระบุ)</option>
+              </select>
+            </div>
+            <div class="col-md-6 d-none" id="hRoleStatusOtherWrap">
+              <label class="form-label small fw-semibold text-muted">ระบุสถานภาพอื่นๆ</label>
+              <input type="text" id="hRoleStatusOther" class="form-control form-control-modern" placeholder="เช่น กัลยาณมิตร, พระอาจารย์...">
+            </div>
+          </div>
+
+          <h6 class="fw-bold text-primary border-bottom pb-2 mt-4 mb-3">2. ข้อมูลการติดต่อ</h6>
+          <div class="row g-2 mb-2">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">เบอร์โทรศัพท์ <span class="text-danger">*</span></label>
+              <input type="tel" id="hPhone" class="form-control form-control-modern" placeholder="08xxxxxxxx">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">Line ID</label>
+              <input type="text" id="hLineId" class="form-control form-control-modern" placeholder="Line ID หรือเบอร์โทร">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">Facebook</label>
+              <input type="text" id="hFacebook" class="form-control form-control-modern" placeholder="ชื่อ Facebook">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">ที่อยู่ปัจจุบัน</label>
+            <textarea id="hAddress" class="form-control form-control-modern" rows="2" placeholder="ที่อยู่..."></textarea>
+          </div>
+
+          <h6 class="fw-bold text-primary border-bottom pb-2 mt-4 mb-3">3. ข้อมูลการศึกษาและการทำงาน</h6>
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted">ประวัติการศึกษา</label>
+            <input type="text" id="hEducation" class="form-control form-control-modern" placeholder="เช่น วิทยาศาสตร์บัณฑิต ม.เกษตรศาสตร์">
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted">ประวัติการทำงาน</label>
+            <textarea id="hWorkExp" class="form-control form-control-modern" rows="2" placeholder="ประวัติการทำงาน..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">ประวัติการอบรม / การบวช</label>
+            <input type="text" id="hOrdination" class="form-control form-control-modern" placeholder="เช่น ธรรมทายาทรุ่น 22">
+          </div>
+
+          <h6 class="fw-bold text-primary border-bottom pb-2 mt-4 mb-3">4. ข้อมูลการรับบุญที่สถานี DMC</h6>
+          <div class="row g-2 mb-2">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">ปีที่เข้ามารับบุญ</label>
+              <input type="date" id="hJoinDate" class="form-control form-control-modern">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">สังกัดภาค / ผู้ประสานงานภาค</label>
+              <input type="text" id="hDepartment" class="form-control form-control-modern" placeholder="เช่น ตะวันออก/สุธาสินี">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold text-muted">ผู้ที่แนะนำให้มารับบุญพิธีกร</label>
+              <input type="text" id="hReferrer" class="form-control form-control-modern" placeholder="ระบุชื่อผู้แนะนำ">
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-muted">รายการที่รับบุญ</label>
+            <input type="text" id="hPrograms" class="form-control form-control-modern" placeholder="เช่น เส้นทางบุญ, พิธีถวายภัตตาหาร">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-modern btn-modern-light" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="button" class="btn btn-modern btn-modern-primary" id="btnSubmitAddHost" onclick="submitFullHostForm()">
+          <i class="bi bi-check2-circle"></i> บันทึกระเบียนพิธีกร
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 5: View Profile Card -->
+<div class="modal fade" id="viewProfileModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header navy-modal-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5 class="modal-title fw-bold text-white m-0"><i class="bi bi-person-badge me-2"></i>ประวัติพิธีกร</h5>
+        <div class="d-flex align-items-center gap-2">
+          <div class="position-relative" style="width: 210px;">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+              <input type="text" id="vpSearchInput" class="form-control form-control-modern border-start-0 ps-0 bg-white" style="min-height:34px;" placeholder="ค้นหาชื่อ, อายุ, สถานภาพ..." oninput="onVpSearchInput()" autocomplete="off">
+            </div>
+            <div id="vpSearchResults" class="list-group position-absolute w-100 shadow d-none mt-1 text-dark" style="z-index: 1060; max-height: 260px; overflow-y: auto; border-radius: 10px;"></div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+      <div class="modal-body p-4 position-relative">
+        <div id="vpLoadingOverlay" class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-none d-flex align-items-center justify-content-center" style="z-index: 10;">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div class="row g-4 align-items-start">
+          <div class="col-md-5 text-center">
+            <img id="vpMainPhoto" src="" class="profile-square-img shadow-sm mb-3 border">
+            <div class="d-flex justify-content-center gap-2" id="vpThumbs"></div>
+          </div>
+          <div class="col-md-7">
+            <h3 class="fw-bold text-dark mb-1" id="vpFullName"></h3>
+            
+            <div class="d-flex align-items-center flex-wrap gap-2 text-muted mb-3 small">
+              <span id="vpStatusBadge" class="badge rounded-pill"></span>
+              <span id="vpRoleStatusBadge" class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 d-none"></span>
+              <span>&bull;</span>
+              <span id="vpNickname" class="text-dark fw-medium"></span>
+              <span>&bull;</span>
+              <span>อายุ <strong class="text-dark" id="vpAge"></strong> ปี</span>
+              <span>&bull;</span>
+              <span>เพศ <span id="vpSex" class="text-dark"></span></span>
+            </div>
+            
+            <div class="p-3 bg-light rounded-3 mb-3 border">
+              <div class="mb-1"><i class="bi bi-telephone text-success me-2"></i><strong>เบอร์โทร:</strong> <a id="vpPhone" href="" class="text-success text-decoration-none fw-bold"></a></div>
+              <div class="mb-1"><i class="bi bi-chat-dots text-primary me-2"></i><strong>Line ID:</strong> <span id="vpLine"></span></div>
+              <div><i class="bi bi-facebook text-primary me-2"></i><strong>Facebook:</strong> <span id="vpFacebook"></span></div>
+            </div>
+
+            <div class="small text-muted mb-2"><strong>ที่อยู่:</strong> <span id="vpAddress" class="text-dark"></span></div>
+            <div class="small text-muted mb-2"><strong>การศึกษา:</strong> <span id="vpEducation" class="text-dark"></span></div>
+            <div class="small text-muted mb-2"><strong>ประวัติการบวช/อบรม:</strong> <span id="vpOrdination" class="text-dark"></span></div>
+            
+            <div class="small text-muted mb-2">
+              <strong class="d-block mb-1">รายการที่รับบุญ:</strong>
+              <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25" style="line-height: 1.5; word-break: break-word;" id="vpPrograms"></div>
+            </div>
+
+            <div class="small text-muted"><strong>สังกัดภาค:</strong> <span id="vpDepartment" class="text-dark"></span> (ผู้แนะนำ: <span id="vpReferrer" class="text-dark"></span>)</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-1">
+          <button class="btn btn-modern btn-modern-light btn-sm" id="btnVpPrev" onclick="navProfile(-1)"><i class="bi bi-chevron-left"></i> ก่อนหน้า</button>
+          <span class="small text-muted mx-2 fw-medium" id="vpIndexIndicator">-/-</span>
+          <button class="btn btn-modern btn-modern-light btn-sm" id="btnVpNext" onclick="navProfile(1)">ถัดไป <i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-modern btn-modern-light btn-sm" onclick="backToDirectory()"><i class="bi bi-list-ul"></i> รายชื่อ</button>
+          <button type="button" class="btn btn-modern btn-secondary btn-sm" data-bs-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 6: Crop & Zoom Image -->
+<div class="modal fade" id="cropImageModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-white">
+        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-crop text-primary me-2"></i>ปรับตำแหน่งและขนาดรูปภาพ (1:1)</h5>
+        <button type="button" class="btn-close" onclick="cancelCropImage()"></button>
+      </div>
+      <div class="modal-body p-3 bg-dark text-center">
+        <div style="height: 320px; width: 100%; overflow: hidden; background: #1e293b; border-radius: 10px;">
+          <img id="cropperTargetImg" src="" style="max-width: 100%; display: block;">
+        </div>
+        <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+          <button type="button" class="btn btn-sm btn-outline-light" onclick="cropperAction('zoom', 0.1)" title="ซูมเข้า"><i class="bi bi-zoom-in"></i> ซูมเข้า</button>
+          <button type="button" class="btn btn-sm btn-outline-light" onclick="cropperAction('zoom', -0.1)" title="ซูมออก"><i class="bi bi-zoom-out"></i> ซูมออก</button>
+          <button type="button" class="btn btn-sm btn-outline-light" onclick="cropperAction('rotate', -90)" title="หมุนซ้าย"><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button type="button" class="btn btn-sm btn-outline-light" onclick="cropperAction('rotate', 90)" title="หมุนขวา"><i class="bi bi-arrow-clockwise"></i></button>
+          <button type="button" class="btn btn-sm btn-outline-light" onclick="cropperAction('reset')" title="รีเซ็ต"><i class="bi bi-arrow-repeat"></i> รีเซ็ต</button>
+        </div>
+        <div class="text-white-50 small mt-2">ลากรูปเพื่อเลื่อนตำแหน่ง หรือใช้ 2 นิ้ว/ลูกกลิ้งเมาส์เพื่อซูม</div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-modern btn-modern-light" onclick="cancelCropImage()">ยกเลิก</button>
+        <button type="button" class="btn btn-modern btn-modern-primary" onclick="confirmCropImage()">
+          <i class="bi bi-check2-circle"></i> ใช้รูปนี้
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // 📌 ลิงก์ API หลังบ้าน Google Apps Script (/exec)
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwisHvsL71r0T94cMhFgpSrkjkAtsZezil9oGOGz_cktll49UBS3t2N-U5FUhKWFapnOg/exec";
+
+  // 📌 ฟังก์ชันกลางสำหรับส่งคำขอไปหา Google Apps Script (แทน google.script.run)
+  async function callGasApi(action, params = {}) {
+    const response = await fetch(GAS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({ action, ...params })
+    });
+    if (!response.ok) {
+      throw new Error("HTTP Error: " + response.status);
+    }
+    return await response.json();
+  }
+
+  let currentData = {}; 
+  let hostOptions = []; 
+  let guestsHistory = [];
+  let allSearchIndex = [];
+  let qaModal, directoryModal, addHostModal, viewProfileModal, smartFinderModal;
+  let tempBase64Photos = ["", "", ""];
+  let currentProfileIndex = -1;
+  let pendingHighlightDate = "";
+
+  let cropperInstance = null;
+  let currentCropSlotIdx = 0;
+  let cropModalInstance = null;
+
+  const standardRoleStatuses = ["อุบาสก", "อุบาสิกา", "อาสาสมัคร", "ศาสนูปถัมภ์"];
+
+  window.onload = function() {
+    qaModal = new bootstrap.Modal(document.getElementById('queueActionModal'));
+    directoryModal = new bootstrap.Modal(document.getElementById('directoryModal'));
+    addHostModal = new bootstrap.Modal(document.getElementById('addHostModal'));
+    viewProfileModal = new bootstrap.Modal(document.getElementById('viewProfileModal'));
+    smartFinderModal = new bootstrap.Modal(document.getElementById('smartFinderModal'));
+
+    document.getElementById('directoryModal').addEventListener('hidden.bs.modal', function () {
+      document.getElementById('navTabDirectory').classList.remove('active');
+    });
+    document.getElementById('smartFinderModal').addEventListener('hidden.bs.modal', function () {
+      document.getElementById('navTabSearch').classList.remove('active');
+    });
+
+    let today = new Date();
+    document.getElementById('monthPicker').value = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+    loadCalendar();
+  };
+
+  function showToast(text) {
+    let toastEl = document.getElementById('copyToast');
+    document.getElementById('copyToastText').innerText = text;
+    toastEl.classList.add('show');
+    setTimeout(() => { toastEl.classList.remove('show'); }, 2600);
+  }
+
+  function exportDailyText(dateStr) {
+    let items = currentData[dateStr] || [];
+    let [yyyy, mm, dd] = dateStr.split('-').map(Number);
+    let dObj = new Date(yyyy, mm - 1, dd);
+    const days = ["วันอาทิตย์", "วันจันทร์", "วันอังคาร", "วันพุธ", "วันพฤหัสบดี", "วันศุกร์", "วันเสาร์"];
+    const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+    let headerTitle = `ตารางงานสตูดิโอ${days[dObj.getDay()]}ที่ ${dd} ${months[mm - 1]} ${yyyy + 543}`;
+
+    if (items.length === 0) {
+      copyTextToClipboard(`${headerTitle}\nไม่มีคิวงานในสตูดิโอ`, `คัดลอกข้อมูลวันที่ ${dd} ${months[mm - 1]} แล้ว`);
+      return;
+    }
+
+    let sorted = [...items].sort((a, b) => timeToMinutes(a.startTime || "09:00") - timeToMinutes(b.startTime || "09:00"));
+
+    let blocks = sorted.map((it, idx) => {
+      let rawProg = it.fullProgram || "";
+      let isTape = rawProg.startsWith("[เทป]");
+      let typeLabel = isTape ? "บันทึกเทป" : "สด";
+
+      let sTime = it.startTime || "09:00";
+      let eTime = it.endTime || "11:00";
+      if (rawProg.includes("บุปพเปตพลี")) { sTime = "10:05"; eTime = "12:30"; }
+      else if (rawProg.includes("ถวายภัตตาหาร")) { sTime = "10:30"; eTime = "12:30"; }
+      let timeRange = `${sTime} - ${eTime} น.`;
+
+      let cleanTitle = rawProg
+        .replace(/^\[(สด|เทป|พิเศษ)\]\s*/, "")
+        .replace(/\s*\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/, "")
+        .trim();
+
+      if (it.guestName && (cleanTitle.startsWith("ผู้ออกแบบชีวิต") || cleanTitle.startsWith("สู้ต่อไป"))) {
+        cleanTitle = cleanTitle.startsWith("สู้ต่อไป") ? "สู้ต่อไป" : "ผู้ออกแบบชีวิต";
+      }
+
+      let lines = [];
+      lines.push(`${idx + 1}) งาน: ${cleanTitle} (${typeLabel})`);
+      lines.push(`เวลา: ${timeRange}`);
+      lines.push(`สถานที่: สตูดิโอ`);
+
+      let details = [];
+      if (it.guestName) details.push(`วิทยากร: ${it.guestName}`);
+      if (it.episodeTitle) details.push(`ชื่อตอน: ${it.episodeTitle}`);
+
+      let h1 = (it.host1 && it.host1 !== "-" && it.host1 !== "ไม่มีคิวพิธีกร") ? it.host1 : "";
+      let h2 = (it.host2 && it.host2 !== "-" && it.host2 !== "ไม่มีคิวพิธีกร") ? it.host2 : "";
+      if (h1 || h2) {
+        details.push(`พิธีกร 1: ${h1 || "-"}`);
+        details.push(`พิธีกร 2: ${h2 || "-"}`);
+      } else {
+        details.push(`รูปแบบ: เปิดเทป`);
+      }
+
+      if (it.note) details.push(`หมายเหตุ: ${it.note}`);
+
+      lines.push(`รายละเอียด:\n${details.join("\n")}`);
+      return lines.join("\n");
+    });
+
+    let finalText = `${headerTitle}\n\n` + blocks.join("\n\n");
+    copyTextToClipboard(finalText, `คัดลอกหมายงานวันที่ ${dd} ${months[mm - 1]} แล้ว`);
+  }
+
+  function copyTextToClipboard(text, successLabel) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successLabel);
+      }).catch(() => {
+        fallbackCopyText(text, successLabel);
+      });
+    } else {
+      fallbackCopyText(text, successLabel);
+    }
+  }
+
+  function fallbackCopyText(text, successLabel) {
+    let ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast(successLabel);
+    } catch (e) {
+      alert(text);
+    }
+    document.body.removeChild(ta);
+  }
+
+  function openSmartFinder() {
+    document.getElementById('navTabSearch').classList.add('active');
+    smartFinderModal.show();
+    setTimeout(() => {
+      document.getElementById('sfSearchInput').focus();
+      runSmartFinder();
+    }, 250);
+  }
+
+  function clearSmartFinder() {
+    document.getElementById('sfSearchInput').value = '';
+    document.getElementById('sfDateJump').value = '';
+    runSmartFinder();
+  }
+
+  function jumpToDateFromFinder() {
+    let val = document.getElementById('sfDateJump').value;
+    if (!val) return;
+    smartFinderModal.hide();
+    navigateToDate(val);
+  }
+
+  function navigateToDate(dateStr) {
+    let [yyyy, mm, dd] = dateStr.split('-');
+    let targetMonth = `${yyyy}-${mm}`;
+    let picker = document.getElementById('monthPicker');
+
+    if (picker.value !== targetMonth) {
+      pendingHighlightDate = dateStr;
+      picker.value = targetMonth;
+      document.getElementById('programSelect').value = "รวมทุกรายการ";
+      loadCalendar();
+    } else {
+      scrollToSpecificDate(dateStr);
+    }
+  }
+
+  function scrollToSpecificDate(dateStr) {
+    let mobileEl = document.getElementById('agenda_' + dateStr);
+    if (mobileEl && window.innerWidth <= 768) {
+      mobileEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      mobileEl.style.transition = "box-shadow 0.3s ease";
+      mobileEl.style.boxShadow = "0 0 0 3px #f59e0b";
+      setTimeout(() => { mobileEl.style.boxShadow = ""; }, 1800);
+    } else {
+      let desktopEl = document.getElementById('daycard_' + dateStr);
+      if (desktopEl) {
+        desktopEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        desktopEl.style.boxShadow = "0 0 0 3px #f59e0b";
+        setTimeout(() => { desktopEl.style.boxShadow = ""; }, 1800);
+      }
+    }
+  }
+
+  function formatThaiShortDate(dateStr) {
+    let [yyyy, mm, dd] = dateStr.split('-').map(Number);
+    const monthsShort = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+    return `${dd} ${monthsShort[mm - 1]} ${yyyy + 543}`;
+  }
+
+  function runSmartFinder() {
+    let q = document.getElementById('sfSearchInput').value.trim().toLowerCase();
+    let countEl = document.getElementById('sfResultCount');
+    let listEl = document.getElementById('sfResultsList');
+
+    if (!q) {
+      countEl.innerText = "พิมพ์คำค้นหาด้านบน (เช่น ชื่อวิทยากร, พิธีกร, ชื่อรายการ) หรือเลือกวันที่เพื่อข้ามไปดูทันที";
+      listEl.innerHTML = "";
+      return;
+    }
+
+    let matches = allSearchIndex.filter(it => {
+      let thaiDate = formatThaiShortDate(it.dateStr).toLowerCase();
+      let haystack = [
+        it.dateStr, thaiDate, it.fullProgram, it.host1, it.host2, it.guestName, it.episodeTitle, it.note
+      ].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+
+    matches.sort((a, b) => b.dateStr.localeCompare(a.dateStr));
+
+    if (matches.length === 0) {
+      countEl.innerText = `ไม่พบรายการที่ตรงกับ "${q}"`;
+      listEl.innerHTML = `<div class="text-center text-muted py-4 bg-white rounded-3 border">ลองค้นด้วยคำสั้นๆ เช่น ชื่อเล่นพิธีกร หรือชื่อวิทยากร</div>`;
+      return;
+    }
+
+    countEl.innerText = `พบทั้งหมด ${matches.length} รายการ (แตะเพื่อเปิดดูในตาราง)`;
+    listEl.innerHTML = matches.slice(0, 40).map(it => {
+      let mc = [it.host1, it.host2].filter(x => x && x !== "-" && x !== "ไม่มีคิวพิธีกร").join(", ");
+      return `
+        <div class="sf-result-card" onclick="smartFinderModal.hide(); navigateToDate('${it.dateStr}');">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">${formatThaiShortDate(it.dateStr)}</span>
+            <span class="small text-muted"><i class="bi bi-arrow-right-circle"></i> ไปที่วันนี้</span>
+          </div>
+          <div class="fw-bold text-dark">${it.fullProgram}</div>
+          ${it.guestName ? `<div class="small text-dark mt-1"><i class="bi bi-person-fill text-warning me-1"></i>วิทยากร: ${it.guestName} ${it.episodeTitle ? '(' + it.episodeTitle + ')' : ''}</div>` : ''}
+          ${mc ? `<div class="small text-muted mt-1"><i class="bi bi-mic-fill me-1"></i>พิธีกร: ${mc}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  function goToToday() {
+    directoryModal.hide();
+    smartFinderModal.hide();
+
+    let now = new Date();
+    let currentMonthVal = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    let todayStr = currentMonthVal + '-' + String(now.getDate()).padStart(2, '0');
+    let picker = document.getElementById('monthPicker');
+
+    if (picker.value !== currentMonthVal) {
+      pendingHighlightDate = todayStr;
+      picker.value = currentMonthVal;
+      loadCalendar();
+    } else {
+      scrollToSpecificDate(todayStr);
+    }
+  }
+
+  function cleanTelHref(phoneStr) {
+    if (!phoneStr || phoneStr === '-') return '#';
+    let digits = phoneStr.toString().replace(/[^0-9+]/g, '');
+    if (digits.length === 9 && /^[689]/.test(digits)) digits = '0' + digits;
+    return 'tel:' + digits;
+  }
+
+  function formatDisplayPhone(phoneStr) {
+    if (!phoneStr || phoneStr === '-') return '-';
+    let str = phoneStr.toString().trim();
+    let digits = str.replace(/[^0-9]/g, '');
+    if (digits.length === 9 && /^[689]/.test(digits)) return '0' + digits;
+    return str;
+  }
+
+  function loadCalendar() {
+    let pickerVal = document.getElementById('monthPicker').value;
+    let programName = document.getElementById('programSelect').value;
+    let [year, month] = pickerVal.split('-');
+    const mNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+    document.getElementById('printTitle').innerText = "ผังคิว: " + programName + " • ประจำเดือน " + mNames[parseInt(month)-1] + " " + year;
+    
+    let loaderHtml = '<div class="text-center p-5" style="grid-column: span 7;"><div class="spinner-border text-primary mb-2" role="status"></div><div class="text-muted small">กำลังโหลดข้อมูลตารางคิว...</div></div>';
+    document.getElementById('calendarGrid').innerHTML = loaderHtml;
+    document.getElementById('mobileAgendaList').innerHTML = loaderHtml;
+
+    callGasApi('getMonthQueue', { year: year, month: month, programFilter: programName })
+      .then(res => {
+        currentData = res.queue || {}; 
+        hostOptions = res.hosts || [];
+        guestsHistory = res.guestsHistory || [];
+        allSearchIndex = res.searchIndex || [];
+        renderGrid(parseInt(year), parseInt(month));
+      })
+      .catch(err => {
+        let errHtml = `<div class="text-center p-5 text-danger" style="grid-column: span 7;">โหลดข้อมูลไม่สำเร็จ: ${err.message}<br><small class="text-muted">ตรวจสอบการ Deploy ล่าสุดและสิทธิ์ Who has access = Anyone ใน Google Apps Script</small></div>`;
+        document.getElementById('calendarGrid').innerHTML = errHtml;
+        document.getElementById('mobileAgendaList').innerHTML = errHtml;
+      });
+  }
+
+  function getProgramStyleClass(fullProg) {
+    if (fullProg.includes("บุปพเปตพลี")) return "prog-buppha";
+    if (fullProg.includes("ถวายภัตตาหาร")) return "prog-food";
+    if (fullProg.includes("เส้นทางบุญ")) return "prog-sentang";
+    if (fullProg.includes("ผู้ออกแบบชีวิต")) return "prog-design";
+    if (fullProg.includes("สู้ต่อไป")) return "prog-fight";
+    if (fullProg.startsWith("[พิเศษ]")) return "prog-special";
+    return "prog-tape";
+  }
+
+  function createProgramPillHtml(dateStr, it) {
+    let cls = getProgramStyleClass(it.fullProgram);
+    let rawTitle = it.fullProgram.replace(/^\[(พิเศษ|เทป|สด)\]\s*/, '');
+    
+    let timeText = "";
+    let timeMatch = rawTitle.match(/\s*(\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2})$/);
+    if (timeMatch) {
+      timeText = timeMatch[1].replace(/\s+/g, '');
+      rawTitle = rawTitle.replace(timeMatch[0], '').trim();
+    } else if (rawTitle.includes("บุปพเปตพลี")) {
+      timeText = "10:05-12:30";
+    } else if (rawTitle.includes("ถวายภัตตาหาร")) {
+      timeText = "10:30-12:30";
+    } else if (it.startTime && it.endTime) {
+      timeText = `${it.startTime}-${it.endTime}`;
+    }
+
+    let mainProgTitle = rawTitle;
+    let detailLine = "";
+
+    if (rawTitle.includes(" : ")) {
+      let parts = rawTitle.split(" : ");
+      mainProgTitle = parts[0].trim();
+      detailLine = parts.slice(1).join(" : ").trim();
+    } else {
+      let parenMatch = rawTitle.match(/^(.*?)\s*\((.*)\)$/);
+      if (parenMatch && parenMatch[1]) {
+        mainProgTitle = parenMatch[1].trim();
+        detailLine = parenMatch[2].trim();
+      }
+    }
+
+    let timeBadgeHtml = timeText ? `<span class="prog-time-tag">${timeText}</span>` : '';
+    let detailHtml = detailLine ? `<div class="mt-1 opacity-75" style="font-size:0.75rem;">${detailLine}</div>` : '';
+
+    let mcList = [it.host1, it.host2].filter(x => x && x !== "-" && x !== "ไม่มีคิวพิธีกร").join(", ");
+    let hostHtml = mcList ? 
+      `<div class="fw-semibold mt-1 text-dark" style="font-size:0.76rem;"><i class="bi bi-mic-fill me-1 opacity-50"></i>${mcList}</div>` : 
+      (it.note ? `<div class="text-muted mt-1" style="font-size:0.74rem;"><i class="bi bi-collection-play me-1"></i>${it.note}</div>` : '');
+
+    let encodedItem = encodeURIComponent(JSON.stringify(it));
+    
+    return `<div class="prog-pill ${cls}" onclick="event.stopPropagation(); openEditQueueModal('${dateStr}', '${encodedItem}')" title="คลิกเพื่อแก้ไขรายการนี้">
+      <div class="prog-header-wrap">
+        <span class="fw-bold">${mainProgTitle}</span>
+        ${timeBadgeHtml}
+      </div>
+      ${detailHtml}
+      ${hostHtml}
+    </div>`;
+  }
+
+  function renderGrid(year, month) {
+    let grid = document.getElementById('calendarGrid'); 
+    let agenda = document.getElementById('mobileAgendaList');
+    grid.innerHTML = '';
+    agenda.innerHTML = '';
+
+    let firstDay = new Date(year, month - 1, 1).getDay(), daysInMonth = new Date(year, month, 0).getDate();
+    const dayNamesShort = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+
+    let now = new Date();
+    let todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+
+    for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div class="day-card empty-slot"></div>';
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      let dateStr = year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+      let items = currentData[dateStr] || []; 
+      let isToday = (dateStr === todayStr);
+      let isTodayClass = isToday ? 'is-today' : '';
+      let todayBadge = isToday ? '<span class="today-dot ms-1">วันนี้</span>' : '';
+      let dowIndex = new Date(year, month - 1, day).getDay();
+      let dowColor = dowIndex === 0 ? 'text-danger' : (dowIndex === 6 ? 'text-primary' : '');
+
+      let pillsHtml = items.map(it => createProgramPillHtml(dateStr, it)).join('');
+
+      grid.innerHTML += `
+        <div class="day-card ${isTodayClass}" id="daycard_${dateStr}" onclick="openAddQueueModal('${dateStr}')">
+          <div class="day-number">
+            <div><span>${day}</span>${todayBadge}</div>
+            <div class="d-flex align-items-center gap-1">
+              <button type="button" class="btn-day-icon btn-day-copy" onclick="event.stopPropagation(); exportDailyText('${dateStr}')" title="คัดลอกข้อความหมายงานวันที่ ${day}">
+                <i class="bi bi-clipboard"></i>
+              </button>
+              <button type="button" class="btn-day-icon" onclick="event.stopPropagation(); openAddQueueModal('${dateStr}')" title="เพิ่มรายการใหม่ในวันที่ ${day}">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+          </div>
+          ${pillsHtml}
+        </div>`;
+
+      agenda.innerHTML += `
+        <div class="agenda-card ${isTodayClass}" id="agenda_${dateStr}">
+          <div class="agenda-date-box">
+            <span class="agenda-dow ${dowColor}">${dayNamesShort[dowIndex]}</span>
+            <span class="agenda-dom">${day}</span>
+          </div>
+          <div class="agenda-content">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <div>${isToday ? '<span class="today-dot">วันนี้</span>' : ''}</div>
+              <div class="d-flex align-items-center gap-1">
+                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small text-success fw-semibold" style="font-size:0.74rem;" onclick="exportDailyText('${dateStr}')" title="คัดลอกข้อความหมายงานส่ง LINE/SMS">
+                  <i class="bi bi-clipboard"></i> คัดลอกหมายงาน
+                </button>
+                <button type="button" class="btn btn-sm btn-light border py-0 px-2 small text-primary fw-semibold" style="font-size:0.74rem;" onclick="openAddQueueModal('${dateStr}')">
+                  <i class="bi bi-plus-lg"></i> เพิ่ม
+                </button>
+              </div>
+            </div>
+            ${pillsHtml || '<div class="text-muted small py-1" onclick="openAddQueueModal(\'' + dateStr + '\')">ว่าง (แตะเพิ่มรายการ)</div>'}
+          </div>
+        </div>`;
+    }
+
+    if (pendingHighlightDate) {
+      let target = pendingHighlightDate;
+      pendingHighlightDate = "";
+      setTimeout(() => { scrollToSpecificDate(target); }, 250);
+    } else {
+      let todayEl = document.getElementById('agenda_' + todayStr);
+      if (todayEl && window.innerWidth <= 768) {
+        setTimeout(() => { todayEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+      }
+    }
+  }
+
+  function findHostInfo(nameStr) {
+    if (!nameStr) return null;
+    let clean = nameStr.trim();
+    return hostOptions.find(h => 
+      h.displayName === clean || 
+      h.name === clean || 
+      h.firstName === clean || 
+      clean.startsWith(h.name) ||
+      clean.startsWith(h.firstName)
+    );
+  }
+
+  function displayContact(boxId, hostInfo) {
+    let box = document.getElementById(boxId);
+    if (!box) return;
+    let dispPhone = hostInfo ? formatDisplayPhone(hostInfo.phone) : '-';
+    if (hostInfo && dispPhone && dispPhone !== "-") {
+      box.innerHTML = `<i class="bi bi-telephone-fill me-1"></i> <a href="${cleanTelHref(dispPhone)}" class="fw-bold text-primary text-decoration-none">${dispPhone}</a>`;
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+      box.innerHTML = "";
+    }
+  }
+
+  function buildHostDropdownOptions(excludeName, selectedName, emptyLabel) {
+    let html = `<option value="">${emptyLabel}</option>`;
+    hostOptions.forEach(h => {
+      if (h.status === "Retire") return;
+      if (h.name === excludeName) return;
+
+      let isSelected = (h.name === selectedName) ? 'selected' : '';
+      if (h.status === "Rest") {
+        html += `<option value="${h.name}" disabled style="background-color: #fffbeb; color: #92400e;">[Rest] ${h.name}</option>`;
+      } else {
+        html += `<option value="${h.name}" ${isSelected}>${h.name}</option>`;
+      }
+    });
+    return html;
+  }
+
+  function openAddQueueModal(dateStr) {
+    document.getElementById('qaDate').value = dateStr;
+    document.getElementById('qaEditRowIdx').value = "";
+    document.getElementById('qaOldProgramName').value = "";
+    document.getElementById('qaOldGuestName').value = "";
+
+    document.getElementById('qaModalTitle').innerHTML = `<i class="bi bi-plus-circle text-primary me-2"></i>เพิ่มรายการใหม่ <span class="badge bg-light text-dark border ms-1">${dateStr}</span>`;
+    document.getElementById('qaCategoryGroup').classList.remove('d-none');
+    document.getElementById('qaLockedProgramBanner').classList.add('d-none');
+    document.getElementById('btnQaDelete').classList.add('d-none');
+    document.getElementById('btnQaSave').innerHTML = `<i class="bi bi-check2-circle"></i> บันทึก & Sync`;
+
+    document.getElementById('qaGuestName').value = "";
+    document.getElementById('qaEpisodeTitle').value = "";
+    document.getElementById('guestHistoryAlert').classList.add('d-none');
+    document.getElementById('qaEventName').value = "";
+    document.getElementById('qaSessionName').value = "";
+    document.getElementById('qaStartTime').value = "14:00";
+    document.getElementById('qaEndTime').value = "16:00";
+    document.getElementById('qaNote').value = "";
+
+    let filterVal = document.getElementById('programSelect').value;
+    let catSelect = document.getElementById('qaCategorySelect');
+    catSelect.value = (filterVal && filterVal !== "รวมทุกรายการ") ? filterVal : "";
+    onQaCategoryChange();
+
+    window._isQaPopulating = true;
+    document.getElementById('qaHost1').innerHTML = buildHostDropdownOptions("", "", "-- เปิดเทป / ไม่มี --");
+    document.getElementById('qaHost2').innerHTML = buildHostDropdownOptions("", "", "-- เปิดเทป / ไม่มี --");
+    document.getElementById('qaHost1Contact').style.display = "none";
+    document.getElementById('qaHost2Contact').style.display = "none";
+    window._isQaPopulating = false;
+
+    qaModal.show();
+  }
+
+  function openEditQueueModal(dateStr, encodedItem) {
+    let it = JSON.parse(decodeURIComponent(encodedItem));
+    let full = it.fullProgram;
+
+    document.getElementById('qaDate').value = dateStr;
+    document.getElementById('qaEditRowIdx').value = it.rowIdx || "";
+    document.getElementById('qaOldProgramName').value = full;
+    document.getElementById('qaOldGuestName').value = it.guestName || "";
+
+    document.getElementById('qaModalTitle').innerHTML = `<i class="bi bi-pencil-square text-primary me-2"></i>แก้ไขรายการ <span class="badge bg-light text-dark border ms-1">${dateStr}</span>`;
+    document.getElementById('qaCategoryGroup').classList.add('d-none');
+    document.getElementById('qaLockedProgramBanner').classList.remove('d-none');
+    document.getElementById('qaLockedProgramText').innerText = full;
+    document.getElementById('btnQaDelete').classList.remove('d-none');
+    document.getElementById('btnQaSave').innerHTML = `<i class="bi bi-check2-circle"></i> บันทึกการแก้ไข`;
+
+    let catSelect = document.getElementById('qaCategorySelect');
+    if (full.includes("บุปพเปตพลี")) catSelect.value = "พิธีบุปพเปตพลี";
+    else if (full.includes("ถวายภัตตาหาร")) catSelect.value = "พิธีถวายภัตตาหารเป็นสังฆทาน";
+    else if (full.includes("เส้นทางบุญ")) catSelect.value = "เส้นทางบุญ";
+    else if (full.includes("ผู้ออกแบบชีวิต")) catSelect.value = "ผู้ออกแบบชีวิต";
+    else if (full.includes("สู้ต่อไป")) catSelect.value = "สู้ต่อไป";
+    else if (full.startsWith("[เทป]")) catSelect.value = "บันทึกเทปอื่นๆ";
+    else catSelect.value = "รายการพิเศษ";
+
+    onQaCategoryChange();
+
+    document.getElementById('qaStartTime').value = it.startTime || "14:00";
+    document.getElementById('qaEndTime').value = it.endTime || "16:00";
+    document.getElementById('qaNote').value = it.note || "";
+    document.getElementById('guestHistoryAlert').classList.add('d-none');
+
+    if (catSelect.value === "ผู้ออกแบบชีวิต" || catSelect.value === "สู้ต่อไป") {
+      document.getElementById('qaGuestName').value = it.guestName || "";
+      document.getElementById('qaEpisodeTitle').value = it.episodeTitle || "";
+      if (!it.guestName && !it.episodeTitle) {
+        let stripped = full.replace(/^\[เทป\]\s*(ผู้ออกแบบชีวิต|สู้ต่อไป)\s*:?\s*/, '').replace(/\s*\d{1,2}:\d{2}-\d{1,2}:\d{2}$/, '').trim();
+        let m = stripped.match(/^(.*?)\s*\((.*?)\)$/);
+        if (m) {
+          document.getElementById('qaGuestName').value = m[1].trim();
+          document.getElementById('qaEpisodeTitle').value = m[2].trim();
+        } else {
+          document.getElementById('qaGuestName').value = stripped;
+        }
+      }
+    } else {
+      let stripped = full.replace(/^\[(พิเศษ|เทป|สด)\]\s*/, '').replace(/\s*\d{1,2}:\d{2}-\d{1,2}:\d{2}$/, '').trim();
+      if (catSelect.value === "เส้นทางบุญ") stripped = stripped.replace(/^เส้นทางบุญ\s*/, '');
+      let m = stripped.match(/^(.*?)\s*\((.*?)\)$/);
+      if (m && m[1]) {
+        document.getElementById('qaEventName').value = m[1].trim();
+        document.getElementById('qaSessionName').value = m[2].trim();
+      } else if (stripped.startsWith("(") && stripped.endsWith(")")) {
+        document.getElementById('qaEventName').value = stripped.slice(1, -1).trim();
+        document.getElementById('qaSessionName').value = "";
+      } else {
+        document.getElementById('qaEventName').value = stripped;
+        document.getElementById('qaSessionName').value = "";
+      }
+    }
+
+    window._isQaPopulating = true;
+    let h1Match = findHostInfo(it.host1);
+    let h2Match = findHostInfo(it.host2);
+    let val1 = h1Match ? h1Match.name : (it.host1 || "");
+    let val2 = h2Match ? h2Match.name : (it.host2 || "");
+    document.getElementById('qaHost1').innerHTML = buildHostDropdownOptions(val2, val1, "-- เปิดเทป / ไม่มี --");
+    document.getElementById('qaHost2').innerHTML = buildHostDropdownOptions(val1, val2, "-- เปิดเทป / ไม่มี --");
+    document.getElementById('qaHost1').value = val1;
+    document.getElementById('qaHost2').value = val2;
+    displayContact('qaHost1Contact', findHostInfo(val1));
+    displayContact('qaHost2Contact', findHostInfo(val2));
+    window._isQaPopulating = false;
+
+    qaModal.show();
+  }
+
+  function onQaCategoryChange() {
+    let cat = document.getElementById('qaCategorySelect').value;
+    let guestSec = document.getElementById('qaGuestSection');
+    let nameSec = document.getElementById('qaNameSection');
+    let sesCol = document.getElementById('qaSesCol');
+    let timeSec = document.getElementById('qaTimeSection');
+    let evtLabel = document.getElementById('qaEvtLabel');
+
+    guestSec.classList.add('d-none');
+    nameSec.classList.add('d-none');
+    sesCol.classList.remove('d-none');
+    timeSec.classList.add('d-none');
+
+    if (cat === "ผู้ออกแบบชีวิต" || cat === "สู้ต่อไป") {
+      guestSec.classList.remove('d-none');
+      timeSec.classList.remove('d-none');
+      onQaStartTimeChange();
+    } else if (cat === "เส้นทางบุญ") {
+      nameSec.classList.remove('d-none');
+      sesCol.classList.add('d-none');
+      evtLabel.innerText = "ชื่อตอน / หัวข้อ (ถ้ามี)";
+      timeSec.classList.remove('d-none');
+      document.getElementById('qaStartTime').value = "14:00";
+      document.getElementById('qaEndTime').value = "16:00";
+    } else if (cat === "บันทึกเทปอื่นๆ" || cat === "รายการพิเศษ") {
+      nameSec.classList.remove('d-none');
+      evtLabel.innerText = "ชื่องาน / ชื่อรายการ";
+      timeSec.classList.remove('d-none');
+    }
+  }
+
+  function onQaStartTimeChange() {
+    let cat = document.getElementById('qaCategorySelect').value;
+    if (cat === "ผู้ออกแบบชีวิต" || cat === "สู้ต่อไป") {
+      let sVal = document.getElementById('qaStartTime').value;
+      if (sVal) {
+        let [hh, mm] = sVal.split(':').map(Number);
+        let endH = (hh + 2) % 24;
+        document.getElementById('qaEndTime').value = String(endH).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+      }
+    }
+  }
+
+  function checkGuestHistory() {
+    let q = document.getElementById('qaGuestName').value.trim().toLowerCase();
+    let alertBox = document.getElementById('guestHistoryAlert');
+    if (q.length < 2) {
+      alertBox.classList.add('d-none');
+      alertBox.innerHTML = '';
+      return;
+    }
+
+    let matches = guestsHistory.filter(g => g.guestName && g.guestName.toLowerCase().includes(q));
+    if (matches.length === 0) {
+      alertBox.innerHTML = `<div class="small text-success"><i class="bi bi-check-circle me-1"></i>ไม่พบประวัติซ้ำในระบบ (แขกรับเชิญใหม่)</div>`;
+      alertBox.classList.remove('d-none');
+      return;
+    }
+
+    let itemsHtml = matches.slice(0, 4).map(m => {
+      let safeGuest = m.guestName.replace(/'/g, "\\'");
+      return `
+        <div class="d-flex justify-content-between align-items-center py-1 border-bottom border-warning border-opacity-25">
+          <div class="small">
+            <strong>${m.guestName}</strong> <span class="text-muted">(${m.program} &bull; ${m.date})</span>
+            ${m.episodeTitle ? `<div class="text-muted" style="font-size:0.75rem;">ตอน: ${m.episodeTitle} &bull; พิธีกร: ${m.hosts || '-'}</div>` : ''}
+          </div>
+          <button type="button" class="btn btn-sm btn-light border py-0 px-2 small" style="font-size:0.72rem;" onclick="document.getElementById('qaGuestName').value='${safeGuest}'; document.getElementById('guestHistoryAlert').classList.add('d-none');">ใช้ชื่อนี้</button>
+        </div>`;
+    }).join('');
+
+    alertBox.innerHTML = `
+      <div class="p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-50">
+        <div class="small fw-bold text-dark mb-1"><i class="bi bi-clock-history text-warning me-1"></i>พบประวัติเคยออกรายการแล้ว (${matches.length} ครั้ง):</div>
+        ${itemsHtml}
+      </div>`;
+    alertBox.classList.remove('d-none');
+  }
+
+  function updateQaHostOptions() {
+    if (window._isQaPopulating) return;
+    let s1 = document.getElementById('qaHost1'), s2 = document.getElementById('qaHost2');
+    let v1 = s1.value, v2 = s2.value;
+    s2.innerHTML = buildHostDropdownOptions(v1, v2, "-- เปิดเทป / ไม่มี --");
+    s1.innerHTML = buildHostDropdownOptions(v2, v1, "-- เปิดเทป / ไม่มี --");
+    if (v2 && v2 !== v1) s2.value = v2;
+    if (v1 && v1 !== v2) s1.value = v1;
+
+    displayContact('qaHost1Contact', findHostInfo(s1.value));
+    displayContact('qaHost2Contact', findHostInfo(s2.value));
+  }
+
+  function timeToMinutes(tStr) {
+    if (!tStr) return 0;
+    let [h, m] = tStr.split(':').map(Number);
+    return (h * 60) + (m || 0);
+  }
+
+  function submitUniversalQueue() {
+    let dateStr = document.getElementById('qaDate').value;
+    let cat = document.getElementById('qaCategorySelect').value;
+    let editRowIdx = document.getElementById('qaEditRowIdx').value;
+
+    if (!cat) {
+      alert("กรุณาเลือกรายการที่ต้องการจัดก่อนครับ");
+      return;
+    }
+
+    let evtName = document.getElementById('qaEventName').value;
+    if ((cat === "บันทึกเทปอื่นๆ" || cat === "รายการพิเศษ") && !evtName.trim()) {
+      alert("กรุณาระบุชื่องานหรือชื่อรายการครับ");
+      return;
+    }
+
+    let newStart = document.getElementById('qaStartTime').value;
+    let newEnd = document.getElementById('qaEndTime').value;
+    if (cat === "พิธีบุปพเปตพลี") { newStart = "10:05"; newEnd = "12:30"; }
+    else if (cat === "พิธีถวายภัตตาหารเป็นสังฆทาน") { newStart = "10:30"; newEnd = "12:30"; }
+
+    let sMin = timeToMinutes(newStart);
+    let eMin = timeToMinutes(newEnd);
+    if (eMin <= sMin) {
+      alert("เวลาจบต้องมากกว่าเวลาเริ่มครับ");
+      return;
+    }
+
+    let existingItems = currentData[dateStr] || [];
+    let h1 = document.getElementById('qaHost1').value;
+    let h2 = document.getElementById('qaHost2').value;
+    let conflicts = [];
+
+    existingItems.forEach(it => {
+      if (editRowIdx && it.rowIdx && it.rowIdx.toString() === editRowIdx.toString()) return;
+
+      let itStart = it.startTime || "09:00";
+      let itEnd = it.endTime || "11:00";
+      if (it.fullProgram.includes("บุปพเปตพลี")) { itStart = "10:05"; itEnd = "12:30"; }
+      else if (it.fullProgram.includes("ถวายภัตตาหาร")) { itStart = "10:30"; itEnd = "12:30"; }
+
+      let isTimeOverlap = (sMin < timeToMinutes(itEnd)) && (eMin > timeToMinutes(itStart));
+      if (isTimeOverlap) {
+        let hostOverlap = [];
+        if (h1 && (h1 === it.host1 || h1 === it.host2)) hostOverlap.push(h1);
+        if (h2 && (h2 === it.host1 || h2 === it.host2)) hostOverlap.push(h2);
+
+        let detailMsg = `• ${it.fullProgram} (${itStart}-${itEnd})`;
+        if (hostOverlap.length > 0) detailMsg += ` [พิธีกรซ้ำ: ${hostOverlap.join(", ")}]`;
+        conflicts.push(detailMsg);
+      }
+    });
+
+    if (conflicts.length > 0) {
+      alert(`⚠️ ช่วงเวลาของคุณทับกับรายการที่มีอยู่:\n\n${conflicts.join("\n")}\n\nโปรดเลือกช่วงเวลาที่ยังว่างอยู่อีกครั้งครับ`);
+      return;
+    }
+
+    let payload = {
+      dateStr: dateStr,
+      categoryType: cat,
+      evtName: evtName,
+      sesName: document.getElementById('qaSessionName').value,
+      guestName: document.getElementById('qaGuestName').value,
+      episodeTitle: document.getElementById('qaEpisodeTitle').value,
+      sTime: newStart,
+      eTime: newEnd,
+      host1: h1,
+      host2: h2,
+      details: document.getElementById('qaNote').value,
+      editRowIdx: editRowIdx,
+      oldProgramName: document.getElementById('qaOldProgramName').value,
+      oldGuestName: document.getElementById('qaOldGuestName').value
+    };
+
+    qaModal.hide();
+    let loader = '<div class="text-center p-5" style="grid-column: span 7;"><div class="spinner-border text-primary mb-2"></div><div class="text-muted small">กำลังบันทึกข้อมูลและ Sync ปฏิทิน...</div></div>';
+    document.getElementById('calendarGrid').innerHTML = loader;
+    document.getElementById('mobileAgendaList').innerHTML = loader;
+
+    callGasApi('saveUniversalQueue', { payload: payload })
+      .then(msg => {
+        loadCalendar();
+      })
+      .catch(err => {
+        alert("บันทึกไม่สำเร็จ: " + err.message);
+        loadCalendar();
+      });
+  }
+
+  function deleteSelectedQueue() {
+    let dateStr = document.getElementById('qaDate').value;
+    let rowIdx = document.getElementById('qaEditRowIdx').value;
+    let oldProg = document.getElementById('qaOldProgramName').value;
+    let oldGuest = document.getElementById('qaOldGuestName').value;
+
+    if (!confirm(`ยืนยันการลบรายการ "${oldProg}" ใช่หรือไม่?`)) return;
+
+    qaModal.hide();
+    let loader = '<div class="text-center p-5" style="grid-column: span 7;"><div class="spinner-border text-danger mb-2"></div><div class="text-muted small">กำลังลบรายการ...</div></div>';
+    document.getElementById('calendarGrid').innerHTML = loader;
+    document.getElementById('mobileAgendaList').innerHTML = loader;
+
+    callGasApi('deleteQueueByRow', { dateStr: dateStr, rowIdx: rowIdx, fullProgramName: oldProg, guestName: oldGuest })
+      .then(msg => {
+        loadCalendar();
+      })
+      .catch(err => {
+        alert("ลบรายการไม่สำเร็จ: " + err.message);
+        loadCalendar();
+      });
+  }
+
+  function onRoleStatusChange() {
+    let val = document.getElementById('hRoleStatus').value;
+    let otherWrap = document.getElementById('hRoleStatusOtherWrap');
+    if (val === "อื่นๆ") {
+      otherWrap.classList.remove('d-none');
+    } else {
+      otherWrap.classList.add('d-none');
+      document.getElementById('hRoleStatusOther').value = "";
+    }
+  }
+
+  function getSelectedRoleStatus() {
+    let val = document.getElementById('hRoleStatus').value;
+    if (val === "อื่นๆ") {
+      let otherTxt = document.getElementById('hRoleStatusOther').value.trim();
+      return otherTxt ? otherTxt : "อื่นๆ";
+    }
+    return val;
+  }
+
+  function setRoleStatusValue(savedVal) {
+    let sel = document.getElementById('hRoleStatus');
+    let otherWrap = document.getElementById('hRoleStatusOtherWrap');
+    let otherInput = document.getElementById('hRoleStatusOther');
+
+    if (!savedVal) {
+      sel.value = "";
+      otherWrap.classList.add('d-none');
+      otherInput.value = "";
+    } else if (standardRoleStatuses.includes(savedVal)) {
+      sel.value = savedVal;
+      otherWrap.classList.add('d-none');
+      otherInput.value = "";
+    } else {
+      sel.value = "อื่นๆ";
+      otherWrap.classList.remove('d-none');
+      otherInput.value = (savedVal === "อื่นๆ") ? "" : savedVal;
+    }
+  }
+
+  function previewImage(idx) {
+    const fileInput = document.getElementById('inputPhoto' + idx);
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    currentCropSlotIdx = idx;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgEl = document.getElementById('cropperTargetImg');
+      imgEl.src = e.target.result;
+
+      if (!cropModalInstance) {
+        cropModalInstance = new bootstrap.Modal(document.getElementById('cropImageModal'));
+      }
+      cropModalInstance.show();
+
+      document.getElementById('cropImageModal').addEventListener('shown.bs.modal', function initCrop() {
+        if (cropperInstance) cropperInstance.destroy();
+        cropperInstance = new Cropper(imgEl, {
+          aspectRatio: 1,
+          viewMode: 1,
+          dragMode: 'move',
+          autoCropArea: 0.9,
+          restore: false,
+          guides: true,
+          center: true,
+          highlight: false,
+          cropBoxMovable: true,
+          cropBoxResizable: true,
+          toggleDragModeOnDblclick: false,
+        });
+        this.removeEventListener('shown.bs.modal', initCrop);
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function cropperAction(action, val) {
+    if (!cropperInstance) return;
+    if (action === 'zoom') cropperInstance.zoom(val);
+    else if (action === 'rotate') cropperInstance.rotate(val);
+    else if (action === 'reset') cropperInstance.reset();
+  }
+
+  function cancelCropImage() {
+    if (cropperInstance) {
+      cropperInstance.destroy();
+      cropperInstance = null;
+    }
+    document.getElementById('inputPhoto' + currentCropSlotIdx).value = '';
+    if (cropModalInstance) cropModalInstance.hide();
+  }
+
+  function confirmCropImage() {
+    if (!cropperInstance) return;
+    const canvas = cropperInstance.getCroppedCanvas({
+      width: 800,
+      height: 800,
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: 'high',
+    });
+
+    const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    tempBase64Photos[currentCropSlotIdx] = croppedDataUrl;
+
+    let box = document.getElementById('boxPhoto' + currentCropSlotIdx);
+    box.style.backgroundImage = `url('${croppedDataUrl}')`;
+    document.getElementById('lblPhoto' + currentCropSlotIdx).style.display = 'none';
+
+    cropperInstance.destroy();
+    cropperInstance = null;
+    if (cropModalInstance) cropModalInstance.hide();
+  }
+
+  function resetPhotoBoxes() {
+    tempBase64Photos = ["", "", ""];
+    for (let i = 0; i < 3; i++) {
+      let box = document.getElementById('boxPhoto' + i);
+      box.style.backgroundImage = 'none';
+      document.getElementById('lblPhoto' + i).style.display = 'block';
+      document.getElementById('inputPhoto' + i).value = '';
+    }
+    document.getElementById('mainRadio0').checked = true;
+  }
+
+  function openHostDirectory() {
+    document.getElementById('navTabDirectory').classList.add('active');
+    renderHostTable(hostOptions);
+    directoryModal.show();
+  }
+
+  function renderHostTable(list) {
+    let tbody = document.getElementById('hostTableBody');
+    let mCards = document.getElementById('mobileHostCards');
+
+    if (!list || list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">ไม่พบข้อมูลรายชื่อ</td></tr>';
+      mCards.innerHTML = '<div class="text-center text-muted py-4">ไม่พบข้อมูลรายชื่อ</div>';
+      return;
+    }
+
+    let html = '';
+    let mHtml = '';
+
+    list.forEach(h => {
+      let st = h.status || 'Ready';
+      let dispPhone = formatDisplayPhone(h.phone);
+      let telLink = cleanTelHref(dispPhone);
+
+      let avatarHtml = h.photoCover ? 
+        `<img src="${h.photoCover}" class="avatar-sm" referrerpolicy="no-referrer" onerror="this.onerror=null;this.outerHTML='<div class=\\'avatar-placeholder\\'><i class=\\'bi bi-person\\'></i></div>';" style="cursor:pointer;" onclick="openViewProfileModal(${h.rowIdx})">` : 
+        `<div class="avatar-placeholder" style="cursor:pointer;" onclick="openViewProfileModal(${h.rowIdx})"><i class="bi bi-person"></i></div>`;
+
+      html += `<tr>
+        <td class="text-center">${avatarHtml}</td>
+        <td>
+          <div id="nameBar_${h.rowIdx}" class="status-bar-${st} d-flex align-items-center flex-wrap">
+            <span class="fw-semibold text-dark host-name-link" onclick="openViewProfileModal(${h.rowIdx})" title="คลิกเพื่อดูประวัติ">${h.name}</span>
+          </div>
+        </td>
+        <td class="text-dark">${h.nickname || '-'}</td>
+        <td><a href="${telLink}" class="text-decoration-none text-dark"><i class="bi bi-telephone text-success me-1"></i>${dispPhone}</a></td>
+        <td>
+          <select class="form-select form-select-sm select-status-${st}" onchange="onQuickStatusChange(${h.rowIdx}, this)">
+            <option value="Ready" ${st === 'Ready' ? 'selected' : ''}>Ready</option>
+            <option value="Rest" ${st === 'Rest' ? 'selected' : ''}>Rest</option>
+            <option value="Retire" ${st === 'Retire' ? 'selected' : ''}>Retire</option>
+          </select>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-modern btn-modern-light" onclick="openEditHostModal(${h.rowIdx})" title="แก้ไขข้อมูล"><i class="bi bi-pencil text-secondary"></i> แก้ไข</button>
+        </td>
+      </tr>`;
+
+      mHtml += `
+        <div class="m-host-card status-bar-${st}">
+          ${avatarHtml}
+          <div class="flex-grow-1 min-w-0">
+            <div class="fw-bold text-dark text-truncate host-name-link" onclick="openViewProfileModal(${h.rowIdx})">${h.name}</div>
+            <div class="small text-muted mt-1">
+              ${h.nickname ? h.nickname + ' &bull; ' : ''}<a href="${telLink}" class="text-success text-decoration-none fw-semibold"><i class="bi bi-telephone-fill"></i> ${dispPhone}</a>
+            </div>
+          </div>
+          <div class="d-flex flex-column align-items-end gap-1">
+            <select class="form-select form-select-sm select-status-${st}" style="min-height: 32px; font-size: 0.78rem; width: 92px;" onchange="onQuickStatusChange(${h.rowIdx}, this)">
+              <option value="Ready" ${st === 'Ready' ? 'selected' : ''}>Ready</option>
+              <option value="Rest" ${st === 'Rest' ? 'selected' : ''}>Rest</option>
+              <option value="Retire" ${st === 'Retire' ? 'selected' : ''}>Retire</option>
+            </select>
+            <button class="btn btn-sm btn-light border py-0 px-2 small text-muted" style="font-size:0.75rem;" onclick="openEditHostModal(${h.rowIdx})"><i class="bi bi-pencil"></i> แก้ไข</button>
+          </div>
+        </div>`;
+    });
+
+    tbody.innerHTML = html;
+    mCards.innerHTML = mHtml;
+  }
+
+  function onQuickStatusChange(rowIdx, selectEl) {
+    let newStatus = selectEl.value;
+    selectEl.disabled = true;
+
+    selectEl.className = `form-select form-select-sm select-status-${newStatus}`;
+    let nameBar = document.getElementById(`nameBar_${rowIdx}`);
+    if (nameBar) {
+      nameBar.className = `status-bar-${newStatus} d-flex align-items-center flex-wrap`;
+    }
+
+    callGasApi('updateHostStatus', { rowIdx: rowIdx, newStatus: newStatus })
+      .then(res => {
+        selectEl.disabled = false;
+        if (res && res.success) {
+          hostOptions = res.hosts || hostOptions;
+          renderHostTable(hostOptions);
+        } else {
+          alert("เกิดข้อผิดพลาดในการบันทึกสถานะ: " + (res ? res.message : ""));
+        }
+      })
+      .catch(err => {
+        selectEl.disabled = false;
+        alert("เกิดข้อผิดพลาด: " + err.message);
+      });
+  }
+
+  function filterHostDirectory() {
+    let q = document.getElementById('searchHostInput').value.trim().toLowerCase();
+    if (!q) {
+      renderHostTable(hostOptions);
+      return;
+    }
+    let filtered = hostOptions.filter(h => {
+      let searchableText = [
+        h.name, h.nickname, formatDisplayPhone(h.phone), h.status, h.roleStatus, h.age, 
+        h.education, h.workExp, h.ordination, h.department, h.programDuty, h.address
+      ].join(" ").toLowerCase();
+      return searchableText.includes(q);
+    });
+    renderHostTable(filtered);
+  }
+
+  function openViewProfileModal(rowIdx) {
+    directoryModal.hide();
+    document.getElementById('vpSearchInput').value = '';
+    document.getElementById('vpSearchResults').classList.add('d-none');
+    
+    currentProfileIndex = hostOptions.findIndex(h => h.rowIdx === rowIdx);
+    loadProfileByIndex(currentProfileIndex);
+    viewProfileModal.show();
+  }
+
+  function loadProfileByIndex(idx) {
+    if (idx < 0 || idx >= hostOptions.length) return;
+    currentProfileIndex = idx;
+    let target = hostOptions[idx];
+
+    document.getElementById('btnVpPrev').disabled = (currentProfileIndex === 0);
+    document.getElementById('btnVpNext').disabled = (currentProfileIndex === hostOptions.length - 1);
+    document.getElementById('vpIndexIndicator').innerText = `${currentProfileIndex + 1} / ${hostOptions.length}`;
+
+    document.getElementById('vpLoadingOverlay').classList.remove('d-none');
+
+    callGasApi('getHostDetail', { rowIdx: target.rowIdx })
+      .then(res => {
+        document.getElementById('vpLoadingOverlay').classList.add('d-none');
+        if (res.success) {
+          let d = res.data;
+          let dispPhone = formatDisplayPhone(d.phone);
+          document.getElementById('vpFullName').innerText = (d.fname || '') + " " + (d.lname || '');
+          
+          let stBadge = document.getElementById('vpStatusBadge');
+          if (d.status === 'Rest') {
+            stBadge.className = 'badge rounded-pill bg-warning bg-opacity-25 text-dark border border-warning';
+            stBadge.innerText = 'Rest';
+          } else if (d.status === 'Retire') {
+            stBadge.className = 'badge rounded-pill bg-info bg-opacity-25 text-dark border border-info';
+            stBadge.innerText = 'Retire';
+          } else {
+            stBadge.className = 'badge rounded-pill bg-success bg-opacity-10 text-success border border-success border-opacity-25';
+            stBadge.innerText = 'Ready';
+          }
+
+          let roleBadge = document.getElementById('vpRoleStatusBadge');
+          if (d.roleStatus) {
+            roleBadge.innerText = d.roleStatus;
+            roleBadge.classList.remove('d-none');
+          } else {
+            roleBadge.classList.add('d-none');
+          }
+
+          document.getElementById('vpNickname').innerText = d.nick ? 'ชื่อเล่น: ' + d.nick : '-';
+          document.getElementById('vpAge').innerText = d.age || '-';
+          document.getElementById('vpSex').innerText = d.sex || '-';
+          document.getElementById('vpPhone').innerText = dispPhone;
+          document.getElementById('vpPhone').href = cleanTelHref(dispPhone);
+          document.getElementById('vpLine').innerText = formatDisplayPhone(d.lineId);
+          document.getElementById('vpFacebook').innerText = d.facebook || '-';
+          document.getElementById('vpAddress').innerText = d.address || '-';
+          document.getElementById('vpEducation').innerText = d.education || '-';
+          document.getElementById('vpOrdination').innerText = d.ordination || '-';
+          document.getElementById('vpPrograms').innerText = d.programs || '-';
+          document.getElementById('vpDepartment').innerText = d.department || '-';
+          document.getElementById('vpReferrer').innerText = d.referrer || '-';
+
+          let mainImg = document.getElementById('vpMainPhoto');
+          mainImg.referrerPolicy = "no-referrer";
+          let thumbsDiv = document.getElementById('vpThumbs');
+          thumbsDiv.innerHTML = '';
+
+          let validPhotos = (d.photos || []).filter(p => p);
+          if (validPhotos.length > 0) {
+            mainImg.src = d.photoCover || validPhotos[0];
+            validPhotos.forEach(p => {
+              let thumb = document.createElement('img');
+              thumb.src = p;
+              thumb.referrerPolicy = "no-referrer";
+              thumb.style.width = '52px';
+              thumb.style.height = '52px';
+              thumb.style.objectFit = 'cover';
+              thumb.style.borderRadius = '8px';
+              thumb.style.cursor = 'pointer';
+              thumb.className = 'border border-2 me-1';
+              thumb.onclick = () => { mainImg.src = p; };
+              thumbsDiv.appendChild(thumb);
+            });
+          } else {
+            mainImg.src = 'https://via.placeholder.com/300x300?text=No+Photo';
+          }
+        }
+      })
+      .catch(err => {
+        document.getElementById('vpLoadingOverlay').classList.add('d-none');
+      });
+  }
+
+  function navProfile(direction) {
+    let nextIdx = currentProfileIndex + direction;
+    if (nextIdx >= 0 && nextIdx < hostOptions.length) {
+      loadProfileByIndex(nextIdx);
+    }
+  }
+
+  function onVpSearchInput() {
+    let q = document.getElementById('vpSearchInput').value.trim().toLowerCase();
+    let resBox = document.getElementById('vpSearchResults');
+    if (!q) {
+      resBox.classList.add('d-none');
+      resBox.innerHTML = '';
+      return;
+    }
+
+    let matches = [];
+    hostOptions.forEach((h, idx) => {
+      let dispPhone = formatDisplayPhone(h.phone);
+      let matchedReason = "";
+      if (h.name.toLowerCase().includes(q) || (h.nickname && h.nickname.toLowerCase().includes(q))) {
+        matchedReason = h.roleStatus ? `สถานภาพ: ${h.roleStatus}` : "";
+      } else if (h.roleStatus && h.roleStatus.toLowerCase().includes(q)) {
+        matchedReason = `สถานภาพ: ${h.roleStatus}`;
+      } else if (h.age && h.age.toString() === q) {
+        matchedReason = `อายุ ${h.age} ปี`;
+      } else if (h.education && h.education.toLowerCase().includes(q)) {
+        matchedReason = `การศึกษา: ${h.education}`;
+      } else if (h.ordination && h.ordination.toLowerCase().includes(q)) {
+        matchedReason = `อบรม/บวช: ${h.ordination}`;
+      } else if (h.programDuty && h.programDuty.toLowerCase().includes(q)) {
+        matchedReason = `รายการ: ${h.programDuty}`;
+      } else if (h.department && h.department.toLowerCase().includes(q)) {
+        matchedReason = `สังกัด: ${h.department}`;
+      } else if (h.workExp && h.workExp.toLowerCase().includes(q)) {
+        matchedReason = `งาน: ${h.workExp}`;
+      } else if (h.address && h.address.toLowerCase().includes(q)) {
+        matchedReason = `ที่อยู่: ${h.address}`;
+      } else if (dispPhone && dispPhone.includes(q)) {
+        matchedReason = `โทร: ${dispPhone}`;
+      } else {
+        return; 
+      }
+      matches.push({ host: h, index: idx, reason: matchedReason });
+    });
+
+    if (matches.length === 0) {
+      resBox.innerHTML = '<div class="list-group-item small text-muted text-center py-2">ไม่พบข้อมูลที่ตรงกับ "' + q + '"</div>';
+    } else {
+      resBox.innerHTML = `<div class="list-group-item bg-light small fw-bold text-primary py-1 px-3">พบทั้งหมด ${matches.length} ท่าน</div>` + 
+        matches.map(item => `
+          <a href="javascript:void(0)" class="list-group-item list-group-item-action py-2 px-3" onclick="selectProfileFromSearch(${item.index})">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong class="small text-dark">${item.host.name} ${item.host.nickname ? '(' + item.host.nickname + ')' : ''}</strong>
+              <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">อายุ ${item.host.age}</span>
+            </div>
+            ${item.reason ? `<div class="text-muted text-truncate mt-1" style="font-size: 0.75rem;"><i class="bi bi-check2 text-success"></i> ${item.reason}</div>` : ''}
+          </a>
+        `).join('');
+    }
+    resBox.classList.remove('d-none');
+  }
+
+  function selectProfileFromSearch(idx) {
+    document.getElementById('vpSearchInput').value = '';
+    document.getElementById('vpSearchResults').classList.add('d-none');
+    loadProfileByIndex(idx);
+  }
+
+  function backToDirectory() {
+    viewProfileModal.hide();
+    openHostDirectory();
+  }
+
+  function openAddHostModal() {
+    directoryModal.hide();
+    document.getElementById('hostRegForm').reset();
+    document.getElementById('editRowIdx').value = "";
+    document.getElementById('hStatus').value = "Ready";
+    setRoleStatusValue("");
+    resetPhotoBoxes();
+    document.getElementById('hostFormModalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>ฟอร์มลงทะเบียนประวัติพิธีกร';
+    document.getElementById('btnSubmitAddHost').innerHTML = '<i class="bi bi-check2-circle"></i> บันทึกระเบียนพิธีกร';
+    addHostModal.show();
+  }
+
+  function openEditHostModal(rowIdx) {
+    directoryModal.hide();
+    document.getElementById('hostRegForm').reset();
+    resetPhotoBoxes();
+    document.getElementById('editRowIdx').value = rowIdx;
+    document.getElementById('hostFormModalTitle').innerHTML = '<i class="bi bi-pencil-square me-2"></i>แก้ไขประวัติพิธีกร';
+    document.getElementById('btnSubmitAddHost').innerText = "กำลังดึงข้อมูล...";
+    document.getElementById('btnSubmitAddHost').disabled = true;
+    addHostModal.show();
+
+    callGasApi('getHostDetail', { rowIdx: rowIdx })
+      .then(res => {
+        document.getElementById('btnSubmitAddHost').disabled = false;
+        document.getElementById('btnSubmitAddHost').innerHTML = '<i class="bi bi-check2-circle"></i> บันทึกการแก้ไข';
+        if (res.success) {
+          let d = res.data;
+          document.getElementById('hFname').value = d.fname;
+          document.getElementById('hLname').value = d.lname;
+          document.getElementById('hNick').value = d.nick;
+          document.getElementById('hSex').value = d.sex;
+          document.getElementById('hStatus').value = d.status || 'Ready';
+          setRoleStatusValue(d.roleStatus || '');
+          document.getElementById('hBirthDate').value = d.birthDate;
+          document.getElementById('hPhone').value = formatDisplayPhone(d.phone);
+          document.getElementById('hLineId').value = formatDisplayPhone(d.lineId);
+          document.getElementById('hFacebook').value = d.facebook;
+          document.getElementById('hAddress').value = d.address;
+          document.getElementById('hEducation').value = d.education;
+          document.getElementById('hWorkExp').value = d.workExp;
+          document.getElementById('hOrdination').value = d.ordination;
+          document.getElementById('hJoinDate').value = d.joinDate;
+          document.getElementById('hDepartment').value = d.department;
+          document.getElementById('hReferrer').value = d.referrer;
+          document.getElementById('hPrograms').value = d.programs;
+
+          if (d.photos && d.photos.length > 0) {
+            d.photos.forEach((pUrl, idx) => {
+              if (pUrl && idx < 3) {
+                tempBase64Photos[idx] = pUrl;
+                let box = document.getElementById('boxPhoto' + idx);
+                box.style.backgroundImage = `url('${pUrl}')`;
+                document.getElementById('lblPhoto' + idx).style.display = 'none';
+              }
+            });
+          }
+          let radio = document.getElementById('mainRadio' + (d.mainIndex || 0));
+          if (radio) radio.checked = true;
+
+        } else {
+          alert("ไม่สามารถดึงข้อมูลได้: " + res.message);
+        }
+      })
+      .catch(err => {
+        document.getElementById('btnSubmitAddHost').disabled = false;
+        alert("ดึงข้อมูลไม่สำเร็จ: " + err.message);
+      });
+  }
+
+  function submitFullHostForm() {
+    let fname = document.getElementById('hFname').value;
+    let nick = document.getElementById('hNick').value;
+    let birthDate = document.getElementById('hBirthDate').value;
+    let editRowIdx = document.getElementById('editRowIdx').value;
+
+    if (!fname || !nick || !birthDate) {
+      alert("กรุณาระบุ ชื่อจริง, ชื่อเล่น และวันเดือนปีเกิด ให้ครบถ้วนครับ");
+      return;
+    }
+
+    let mainPhotoIdx = document.querySelector('input[name="mainPhotoRadio"]:checked') ? 
+      document.querySelector('input[name="mainPhotoRadio"]:checked').value : 0;
+
+    let formObj = {
+      fname: fname,
+      lname: document.getElementById('hLname').value,
+      nick: nick,
+      sex: document.getElementById('hSex').value,
+      status: document.getElementById('hStatus').value,
+      roleStatus: getSelectedRoleStatus(),
+      birthDate: birthDate,
+      phone: document.getElementById('hPhone').value,
+      lineId: document.getElementById('hLineId').value,
+      facebook: document.getElementById('hFacebook').value,
+      address: document.getElementById('hAddress').value,
+      education: document.getElementById('hEducation').value,
+      workExp: document.getElementById('hWorkExp').value,
+      ordination: document.getElementById('hOrdination').value,
+      joinDate: document.getElementById('hJoinDate').value,
+      department: document.getElementById('hDepartment').value,
+      referrer: document.getElementById('hReferrer').value,
+      programs: document.getElementById('hPrograms').value,
+      photoFiles: tempBase64Photos,
+      mainPhotoIndex: mainPhotoIdx
+    };
+
+    let btn = document.getElementById('btnSubmitAddHost');
+    btn.disabled = true;
+    btn.innerText = "กำลังบันทึกข้อมูล...";
+
+    let actionName = editRowIdx ? 'updateHostData' : 'addNewHostFull';
+    let params = editRowIdx ? { rowIdx: parseInt(editRowIdx), formObj: formObj } : { formObj: formObj };
+
+    callGasApi(actionName, params)
+      .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-check2-circle"></i> บันทึกระเบียนพิธีกร';
+        if (res && res.success) {
+          alert(res.message);
+          addHostModal.hide();
+          hostOptions = res.hosts || [];
+          openHostDirectory();
+        } else {
+          alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่ได้รับผลตอบกลับ"));
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-check2-circle"></i> บันทึกระเบียนพิธีกร';
+        alert("ส่งข้อมูลไม่สำเร็จ: " + err.message);
+      });
+  }
+
+  function downloadAsImage() {
+    let c = document.getElementById('captureArea'), b = document.getElementById('btnSaveImg');
+    let oTxt = b.innerHTML; b.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังสร้างรูป...'; b.disabled = true;
+    document.getElementById('printTitle').style.display = 'block'; c.classList.add('capture-mode');
+    html2canvas(c, { scale: 2, useCORS: true }).then(canvas => {
+      document.getElementById('printTitle').style.display = 'none'; c.classList.remove('capture-mode'); b.innerHTML = oTxt; b.disabled = false;
+      canvas.toBlob(blob => {
+        let f = new File([blob], 'MC_Queue.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [f] })) {
+          navigator.share({ files: [f], title: 'คิวพิธีกร' }).catch(()=>{});
+        } else {
+          let l = document.createElement('a'); l.download = 'MC_Queue.png'; l.href = URL.createObjectURL(blob); l.click();
+        }
+      }, 'image/png');
+    });
+  }
+</script>
 </body>
 </html>
